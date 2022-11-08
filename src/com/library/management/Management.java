@@ -1,10 +1,10 @@
 package com.library.management;
 
 public interface Management {
-    public void input();
-    public void output();
-    public void add();
-    public void edit();
-    public void remove();
-    public void statistic();
+    public abstract void input();
+    public abstract void output();
+    public abstract void add();
+    public abstract void edit();
+    public abstract void remove();
+    public abstract void statistic();
 }
