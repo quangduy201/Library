@@ -6,15 +6,17 @@ import java.util.Scanner;
 
 public class Employee extends Person {
     private String roll;
-    private Day strartDay;
-    private Double salary;
-    public Employee(){
+    private Day startDate;
+    private double salary;
+
+    public Employee() {
 
     }
-    public Employee(String roll,Day strartDay,Double salary){
-        this.roll=roll;
-        this.strartDay=strartDay;
-        this.salary=salary;
+
+    public Employee(String roll, Day startDate, double salary) {
+        this.roll = roll;
+        this.startDate = startDate;
+        this.salary = salary;
     }
 
     public String getRoll() {
@@ -25,12 +27,12 @@ public class Employee extends Person {
         this.roll = roll;
     }
 
-    public Day getStrartDay() {
-        return strartDay;
+    public Day getStartDay() {
+        return startDate;
     }
 
-    public void setStrartDay(Day strartDay) {
-        this.strartDay = strartDay;
+    public void setStartDay(Day startDate) {
+        this.startDate = startDate;
     }
 
     public Double getSalary() {
@@ -55,7 +57,7 @@ public class Employee extends Person {
 //            System.out.println("Enter startDate: ");
 //            startDate = sc.nextLine();
 //        }while(startDate != "a");
-//        setStrartDay(startDate);
+//        setStartDay(startDate);
 //        do {
 //            System.out.println("Enter salary: ");
 //            salary = sc.nextLine();
@@ -65,9 +67,11 @@ public class Employee extends Person {
 //    @Override
 //    public void output(){
 //        super.output();
-//        System.out.println("Roll: "+roll+"\t StrartDate: "+strartDay+"\t Salary: "+salary);
+//        System.out.println("Roll: "+roll+"\t StartDate: "+startDate+"\t Salary: "+salary);
 //    }
-//    public calculatePrice(Day borrowDay,Day returnDay){
-//        double
-//    }
+
+    @Override
+    public double calculatePrice(Day borrowDay, Day returnDay) {
+        return 0;
+    }
 }

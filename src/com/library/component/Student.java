@@ -1,19 +1,23 @@
 package com.library.component;
 
+import com.library.util.Day;
+
 import java.util.Scanner;
 
 public class Student extends Person {
-    public static String school;
+    public static String school = "Đại học Sài Gòn";
     public String faculty;
     public String major;
-    public String classic;
-    public Student(){
+    public String classroom;
+
+    public Student() {
 
     }
-    public Student(String faculty,String major,String classic){
-        this.faculty=faculty;
-        this.major=major;
-        this.classic=classic;
+
+    public Student(String faculty, String major, String classroom) {
+        this.faculty = faculty;
+        this.major = major;
+        this.classroom = classroom;
     }
 
     public String getFaculty() {
@@ -32,18 +36,19 @@ public class Student extends Person {
         this.major = major;
     }
 
-    public String getClassic() {
-        return classic;
+    public String getClassroom() {
+        return classroom;
     }
 
-    public void setClassic(String classic) {
-        this.classic = classic;
+    public void setClassroom(String classroom) {
+        this.classroom = classroom;
     }
+
 //    @Override
 //    public void input(){
 //        Scanner sc = new Scanner(System.in);
 //        super.input();
-//        String faculty,major,classic;
+//        String faculty,major,classroom;
 //        do {
 //            System.out.println("Enter faculty: ");
 //            faculty = sc.nextLine();
@@ -55,17 +60,22 @@ public class Student extends Person {
 //        }while(major.isEmpty());
 //        setMajor(major);
 //        do {
-//            System.out.println("Enter classic: ");
-//            classic = sc.nextLine();
+//            System.out.println("Enter classroom: ");
+//            classroom = sc.nextLine();
 //        }while(major.isEmpty());
-//        setClassic(classic);
+//        setClassroom(classroom);
 //    }
 //    @Override
 //    public void output(){
 //        super.output();
-//        System.out.println("Faculty: "+faculty+"\t Major: "+major+"\t Classic: "+classic);
+//        System.out.println("Faculty: "+faculty+"\t Major: "+major+"\t Classroom: "+classroom);
 //    }
 //        public calculatePrice(Day borrowDay,Day returnDay){
 //        double
 //    }
+
+    @Override
+    public double calculatePrice(Day borrowDay, Day returnDay) {
+        return 0;
+    }
 }

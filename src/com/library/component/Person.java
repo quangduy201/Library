@@ -2,36 +2,37 @@ package com.library.component;
 
 import com.library.util.Day;
 
-import java.net.IDN;
 import java.util.Scanner;
 
 public abstract class Person {
-    private int ID;
+    private int id;
     private String name;
     private Day dob;
     private String gender;
     private String phone;
     private String address;
     private String email;
-    public Person(){
+
+    public Person() {
 
     }
-    public Person(int ID,String name,Day dob,String gender,String phone,String address,String email){
-        this.ID=ID;
-        this.name=name;
-        this.dob=dob;
-        this.gender=gender;
-        this.phone=phone;
-        this.address=address;
-        this.email=email;
+
+    public Person(int id, String name, Day dob, String gender, String phone, String address, String email) {
+        this.id = id;
+        this.name = name;
+        this.dob = dob;
+        this.gender = gender;
+        this.phone = phone;
+        this.address = address;
+        this.email = email;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -130,7 +131,5 @@ public abstract class Person {
 //    public  void output(){
 //        System.out.println("ID: "+ID+"\t Name: "+name+"\t Dob: "+dob+"\t Gender: "+gender+"\t Phone: "+phone+"\t address: "+address+"\t Email: "+email);
 //    }
-//    public abstract calculatePrice(Day borrowDay,Day returnDay){
-//
-//    }
+    public abstract double calculatePrice(Day borrowDay, Day returnDay);
 }
