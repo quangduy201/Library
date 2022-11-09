@@ -3,6 +3,10 @@ package com.library.management;
 import com.library.component.Dictionary;
 import com.library.component.EducationBook;
 import com.library.component.ReferenceBook;
+import com.library.main.Library;
+
+import javax.swing.*;
+import java.util.Scanner;
 
 public class BookManagement implements Management {
     private EducationBook[] education;
@@ -37,22 +41,35 @@ public class BookManagement implements Management {
         this.dictionary = dictionary;
     }
 
-    public void input() {
 
+
+    @Override
+    public void input() {
+        JTextArea textBox = Library.getUi().getTextBox();
+        String input;
+        String text = "";
+        text += "Enter number of books:\n";
+        textBox.setText(text);
+        textBox.setEditable(true);
+        textBox.getCaret().setVisible(true);
     }
 
+    @Override
     public void output() {
 
     }
 
+    @Override
     public void add() {
 
     }
 
+    @Override
     public void edit() {
 
     }
 
+    @Override
     public void remove() {
 
     }
@@ -93,6 +110,7 @@ public class BookManagement implements Management {
         return new Dictionary[0];
     }
 
+    @Override
     public void statistic() {
 
     }

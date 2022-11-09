@@ -17,22 +17,27 @@ public class EmployeeManagement implements Management {
         this.employees = employees;
     }
 
+    @Override
     public void input() {
 
     }
 
+    @Override
     public void output() {
 
     }
 
+    @Override
     public void add() {
 
     }
 
+    @Override
     public void edit() {
 
     }
 
+    @Override
     public void remove() {
 
     }
@@ -45,6 +50,7 @@ public class EmployeeManagement implements Management {
         return new Employee();
     }
 
+    @Override
     public void statistic() {
 
     }

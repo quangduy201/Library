@@ -4,29 +4,35 @@ import com.library.management.*;
 import com.library.ui.UI;
 
 public class Library {
-    private BookManagement bookMan;
-    private EmployeeManagement employeeMan;
-    private StudentManagement studentMan;
+    private static BookManagement bookMan;
+    private static EmployeeManagement employeeMan;
+    private static StudentManagement studentMan;
+    private static UI ui;
 
     public Library() {
 
     }
 
-    public BookManagement getBookMan() {
+    public static BookManagement getBookManagement() {
         return bookMan;
     }
 
-    public EmployeeManagement getEmployeeMan() {
+    public static EmployeeManagement getEmployeeManagement() {
         return employeeMan;
     }
 
-    public StudentManagement getStudentMan() {
+    public static StudentManagement getStudentManagement() {
         return studentMan;
     }
 
+    public static UI getUi() {
+        return ui;
+    }
+
     public static void main(String[] args) {
-        UI ui = new UI();
-        Library library = new Library();
-        System.out.println("Hello World!");
+        bookMan = new BookManagement();
+        studentMan = new StudentManagement();
+        employeeMan = new EmployeeManagement();
+        ui = new UI();
     }
 }

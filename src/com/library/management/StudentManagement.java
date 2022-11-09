@@ -17,22 +17,27 @@ public class StudentManagement implements Management {
         this.students = students;
     }
 
+    @Override
     public void input() {
 
     }
 
+    @Override
     public void output() {
 
     }
 
+    @Override
     public void add() {
 
     }
 
+    @Override
     public void edit() {
 
     }
 
+    @Override
     public void remove() {
 
     }
@@ -43,5 +48,10 @@ public class StudentManagement implements Management {
 
     public Student findStudent(String name) {
         return new Student();
+    }
+
+    @Override
+    public void statistic() {
+
     }
 }
