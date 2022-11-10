@@ -45,13 +45,13 @@ public class BookManagement implements Management {
 
     @Override
     public void input() {
-        JTextArea textBox = Library.getUi().getTextBox();
-        String input;
-        String text = "";
-        text += "Enter number of books:\n";
-        textBox.setText(text);
-        textBox.setEditable(true);
-        textBox.getCaret().setVisible(true);
+//        JTextArea textBox = Library.getUi().getTextBox();
+//        String input;
+//        String text = "";
+//        text += "Enter number of books:\n";
+//        textBox.setText(text);
+//        textBox.setEditable(true);
+//        textBox.getCaret().setVisible(true);
     }
 
     @Override

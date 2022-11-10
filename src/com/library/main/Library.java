@@ -7,6 +7,7 @@ public class Library {
     private static BookManagement bookMan;
     private static EmployeeManagement employeeMan;
     private static StudentManagement studentMan;
+    private static BorrowAndReturn borrowAndReturn;
     private static UI ui;
 
     public Library() {
@@ -25,6 +26,10 @@ public class Library {
         return studentMan;
     }
 
+    public static BorrowAndReturn getBorrowAndReturn() {
+        return borrowAndReturn;
+    }
+
     public static UI getUi() {
         return ui;
     }
@@ -33,6 +38,7 @@ public class Library {
         bookMan = new BookManagement();
         studentMan = new StudentManagement();
         employeeMan = new EmployeeManagement();
+        borrowAndReturn = new BorrowAndReturn();
         ui = new UI();
     }
 }
