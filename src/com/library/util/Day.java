@@ -1,17 +1,18 @@
 package com.library.util;
 
-
 public class Day {
     private int date, month, year;
+
+    public Day() {
+        this.date = 0;
+        this.month = 0;
+        this.year = 0;
+    }
 
     public Day(int date, int month, int year) {
         this.date = date;
         this.month = month;
         this.year = year;
-    }
-
-    public Day() {
-
     }
 
     public int getDate() {
@@ -43,109 +44,79 @@ public class Day {
     }
 
     public static int numOfDays(int month, int year) {
-        int date = 0;
+        int days = 0;
         switch (month) {
             case 2:
                 if (isLeapYear(year))
-                    date = 29;
+                    days = 29;
                 else
-                    date = 28;
+                    days = 28;
                 break;
             case 1, 3, 5, 7, 8, 10, 12:
-                date = 31;
+                days = 31;
                 break;
             case 4, 6, 9, 11:
-                date = 30;
+                days = 30;
                 break;
             default:
                 break;
         }
-        return date;
+        return days;
     }
 
     public static boolean isValidDay(int date, int month, int year) {
-        if (date == numOfDays(month, year)) {
-            return true;
-        } else {
-            return false;
-        }
+        return  year > 1930 && year <= 2030 &&
+                month > 0 && month <= 12 &&
+                date > 0 && date <= numOfDays(month, year);
+    }
+
+    public static boolean isValidDay(Day day) {
+        return  day.year > 1930 && day.year <= 2030 &&
+                day.month > 0 && day.month <= 12 &&
+                day.date > 0 && day.date <= numOfDays(day.month, day.year);
     }
 
     public static int calculateDays(Day day1, Day day2) {
-        int days = 0, date1, date2, month1, month2, year1, year2;
-        /*
-        year1 month1 date1 là ngày lớn hơn year2 month2 date2
-        * nếu day1.year > day2.year thì day1 gán vào year1 month1 date1 và ngược lại
-        * nếu day1.year = day2.year thì xét tháng:
-        * nếu day1.month > day2.month thì day1 gán vào year1 month1 date1 và ngược lại
-        * nếu day1.month = day2.month thì xét ngày:
-        * nếu day1.date > day2.date thì day1 gán vào year1 month1 date1 và ngược lại
-        */
-        if (day1.year > day2.year) {
-            year1 = day1.year;
-            year2 = day2.year;
-            month1 = day1.month;
-            month2 = day2.month;
-            date1 = day1.date;
-            date2 = day2.date;
+        int days = 0;
+        Day temp1, temp2;
+        /**
+         *      temp1 là ngày nhỏ hơn temp2 (ngày nhỏ hơn sẽ gán vào temp1)
+         * nếu day1.year < day2.year thì gán day1 vào temp1 và ngược lại
+         * nếu day1.year = day2.year thì xét tháng:
+         * nếu day1.month < day2.month thì gán day1 vào temp1 và ngược lại
+         * nếu day1.month = day2.month thì xét ngày:
+         * nếu day1.date = day2.date thì gán day1 vào temp1 và ngược lại
+         */
+        if (day1.year < day2.year ||
+            day1.year == day2.year && day1.month < day2.month ||
+            day1.year == day2.year && day1.month == day2.month && day1.date < day2.date) {
+            temp1 = new Day(day1.date, day1.month, day1.year);
+            temp2 = new Day(day2.date, day2.month, day2.year);
         } else {
-            if (day1.year < day2.year) {
-                year1 = day2.year;
-                year2 = day1.year;
-                month1 = day2.month;
-                month2 = day1.month;
-                date1 = day2.date;
-                date2 = day1.date;
-            } else {
-                if (day1.month > day2.month) {
-                    year1 = day1.year;
-                    year2 = day2.year;
-                    month1 = day1.month;
-                    month2 = day2.month;
-                    date1 = day1.date;
-                    date2 = day2.date;
-                } else {
-                    if (day1.month < day2.month) {
-                        year1 = day2.year;
-                        year2 = day1.year;
-                        month1 = day2.month;
-                        month2 = day1.month;
-                        date1 = day2.date;
-                        date2 = day1.date;
-                    } else {
-                        if (day1.date > day2.date) {
-                            year1 = day1.year;
-                            year2 = day2.year;
-                            month1 = day1.month;
-                            month2 = day2.month;
-                            date1 = day1.date;
-                            date2 = day2.date;
-                        } else {
-                            year1 = day2.year;
-                            year2 = day1.year;
-                            month1 = day2.month;
-                            month2 = day1.month;
-                            date1 = day2.date;
-                            date2 = day1.date;
-                        }
-                    }
-                }
-            }
+            temp1 = new Day(day2.date, day2.month, day2.year);
+            temp2 = new Day(day1.date, day1.month, day1.year);
         }
-        while (year1 >= year2) {
-            if (year1 == year2 && month1 == month2) {
-                days += date1 - date2;
+        while (temp1.year <= temp2.year) {
+            if (temp1.year == temp2.year && temp1.month == temp2.month) {
+                days += temp2.date - temp1.date;
                 break;
             } else {
-                days += (numOfDays(month2, year2) - date2);
-                month2++;
-                date2 = 0;
-                if (month2 > 12) {
-                    year2++;
-                    month2 = 1;
+                days += numOfDays(temp1.month, temp2.year) - temp1.date;
+                temp1.month++;
+                temp1.date = 0;
+                if (temp1.month > 12) {
+                    temp1.year++;
+                    temp1.month = 1;
                 }
             }
         }
         return days;
+    }
+
+    @Override
+    public String toString() {
+        return  ((date < 10) ? "0" : "") + date + "/" +
+                ((month < 10) ? "0" : "") + month + "/" +
+                year;
     }
 }

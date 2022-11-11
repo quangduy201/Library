@@ -10,6 +10,15 @@ public class Bill extends Day {
     private Day returnDay;
     private double price;
 
+    public Bill() {
+        this.book = new Book[0];
+        this.student = new Student();
+        this.employee = new Employee();
+        this.borrowDay = new Day();
+        this.returnDay = new Day();
+        this.price = 0.0;
+    }
+
     public Bill(Book[] book, Student student, Employee employee, Day borrowDay, Day returnDay, double price) {
         this.book = book;
         this.student = student;
@@ -17,9 +26,6 @@ public class Bill extends Day {
         this.borrowDay = borrowDay;
         this.returnDay = returnDay;
         this.price = price;
-    }
-
-    public Bill() {
     }
 
     public Book[] getBook() {

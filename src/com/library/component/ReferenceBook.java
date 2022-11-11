@@ -2,12 +2,16 @@ package com.library.component;
 
 import com.library.util.Day;
 
+import java.util.Scanner;
+
 public class ReferenceBook extends Book {
     private String author;
     private String translator;
 
     public ReferenceBook() {
-
+        super();
+        this.author = "";
+        this.translator = "";
     }
 
     public ReferenceBook(int id, String name, int remain, double price, Day publishDay, String author, String translator) {
@@ -34,12 +38,27 @@ public class ReferenceBook extends Book {
 
     @Override
     public void input() {
+        super.input();
+        Scanner sc = new Scanner(System.in);
+        String input;
 
+        do {
+            System.out.print("Enter author: ");
+            input = sc.nextLine();
+        } while (input.isBlank());
+        setAuthor(input);
+
+        do {
+            System.out.print("Enter translator: ");
+            input = sc.nextLine();
+        } while (input.isBlank());
+        setTranslator(input);
     }
 
     @Override
     public void output() {
-
+        super.output();
+        System.out.printf("%30s  |  %s\n", author, translator);
     }
 
     public void update() {

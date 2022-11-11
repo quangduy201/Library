@@ -2,14 +2,19 @@ package com.library.component;
 
 import com.library.util.Day;
 
+import java.util.Scanner;
+
 public class Student extends Person {
-    private static String school;
+    private static String school = "Đại học Sài Gòn";
     private String faculty;
     private String major;
     private String classroom;
 
     public Student() {
-
+        super();
+        this.faculty = "";
+        this.major = "";
+        this.classroom = "";
     }
 
     public Student(int id, String name, Day dob, String gender, String phone, String address, String email, String faculty, String major, String classroom) {
@@ -54,11 +59,32 @@ public class Student extends Person {
     @Override
     public void input() {
         super.input();
+        Scanner sc = new Scanner(System.in);
+        String input;
+
+        do {
+            System.out.print("Enter faculty: ");
+            input = sc.nextLine();
+        } while (input.isBlank());
+        setFaculty(input);
+
+        do {
+            System.out.print("Enter major: ");
+            input = sc.nextLine();
+        } while (input.isBlank());
+        setMajor(input);
+
+        do {
+            System.out.print("Enter classroom: ");
+            input = sc.nextLine();
+        } while (input.isBlank());
+        setClassroom(input);
     }
 
     @Override
     public void output() {
         super.output();
+        System.out.printf("%25s  |  %25s  |  %25s  |  %s", school, faculty, major, classroom);
     }
 
     @Override

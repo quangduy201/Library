@@ -16,7 +16,7 @@ public class BorrowAndReturn {
             System.out.println("Enter information Education Book:");
             eduBook.input();
             BookManagement bookManagement = Library.getBookManagement();
-            EducationBook temp = bookManagement.findEducationBook(eduBook.getId());
+            Book temp = bookManagement.findBook(eduBook.getId());
             if (temp == null) {
                 System.out.println("Book not found!");
                 return;
@@ -27,7 +27,7 @@ public class BorrowAndReturn {
             System.out.println("Enter information Reference Book:");
             refBook.input();
             BookManagement bookManagement = Library.getBookManagement();
-            ReferenceBook temp = bookManagement.findReferenceBook(refBook.getId());
+            Book temp = bookManagement.findBook(refBook.getId());
             if (temp == null) {
                 System.out.println("Book not found!");
                 return;
@@ -38,7 +38,7 @@ public class BorrowAndReturn {
             System.out.println("Enter information Dictionary:");
             dictionary.input();
             BookManagement bookManagement = Library.getBookManagement();
-            Dictionary temp = bookManagement.findDictionary(dictionary.getId());
+            Book temp = bookManagement.findBook(dictionary.getId());
             if (temp == null) {
                 System.out.println("Book not found!");
                 return;
@@ -74,7 +74,7 @@ public class BorrowAndReturn {
             System.out.println("Enter information Education Book:");
             eduBook.input();
             BookManagement bookMan = new BookManagement();
-            EducationBook temp = bookMan.findEducationBook(eduBook.getId());
+            Book temp = bookMan.findBook(eduBook.getId());
             if (temp == null) {
                 System.out.println("Book not found!");
                 return;
@@ -85,7 +85,7 @@ public class BorrowAndReturn {
             System.out.println("Enter information ReferenceBook:");
             refBook.input();
             BookManagement bookMan = new BookManagement();
-            ReferenceBook temp = bookMan.findReferenceBook(refBook.getId());
+            Book temp = bookMan.findBook(refBook.getId());
             if (temp == null) {
                 System.out.println("Book not found!");
                 return;
@@ -96,7 +96,7 @@ public class BorrowAndReturn {
             System.out.println("Enter information Dictionary:");
             dictionary.input();
             BookManagement bookMan = new BookManagement();
-            Dictionary temp = bookMan.findDictionary(dictionary.getId());
+            Book temp = bookMan.findBook(dictionary.getId());
             if (temp == null) {
                 System.out.println("Book not found!");
                 return;
