@@ -6,7 +6,7 @@ public class StudentManagement implements Management {
     private Student[] students;
 
     public StudentManagement() {
-
+        this.students = new Student[0];
     }
 
     public Student[] getStudents() {
@@ -39,6 +39,11 @@ public class StudentManagement implements Management {
 
     @Override
     public void remove() {
+
+    }
+
+    @Override
+    public void find() {
 
     }
 

@@ -6,7 +6,7 @@ public class EmployeeManagement implements Management {
     private Employee[] employees;
 
     public EmployeeManagement() {
-
+        this.employees = new Employee[0];
     }
 
     public Employee[] getEmployees() {
@@ -39,6 +39,11 @@ public class EmployeeManagement implements Management {
 
     @Override
     public void remove() {
+
+    }
+
+    @Override
+    public void find() {
 
     }
 
