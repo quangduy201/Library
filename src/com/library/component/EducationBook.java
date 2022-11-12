@@ -29,13 +29,13 @@ public class EducationBook extends Book {
     public void input() {
         super.input();
         Scanner sc = new Scanner(System.in);
-        String input;
+        String publisher;
 
         do {
             System.out.print("Enter publisher: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setPublisher(input);
+            publisher = sc.nextLine();
+        } while (publisher.isBlank());
+        setPublisher(publisher);
     }
 
     @Override

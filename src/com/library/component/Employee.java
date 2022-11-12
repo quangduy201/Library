@@ -52,47 +52,52 @@ public class Employee extends Person {
         super.input();
         Scanner sc = new Scanner(System.in);
         String input;
-        String[] inputToArray;
-        Day inputToDay = new Day();
-        double inputToDouble = 0.0;
+        String[] day;
+        String roll;
+        Day startDate = new Day();
+        double salary = 0.0;
         boolean hasError;
 
         do {
             System.out.print("Enter roll: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setRoll(input);
+            roll = sc.nextLine();
+        } while (roll.isBlank());
+        setRoll(roll);
 
         do {
             hasError = false;
             System.out.print("Enter start date (dd/mm/yyyy): ");
             input = sc.nextLine();
-            inputToArray = input.split("/");
+            day = input.split("/");
             try {
-                inputToDay.setDate(Integer.parseInt(inputToArray[0]));
-                inputToDay.setMonth(Integer.parseInt(inputToArray[1]));
-                inputToDay.setYear(Integer.parseInt(inputToArray[2]));
+                startDate.setDate(Integer.parseInt(day[0]));
+                startDate.setMonth(Integer.parseInt(day[1]));
+                startDate.setYear(Integer.parseInt(day[2]));
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || !Day.isValidDay(inputToDay));
+        } while (hasError || !Day.isValidDay(startDate));
+        setStartDate(startDate);
 
         do {
             hasError = false;
             System.out.print("Enter salary: ");
             input = sc.nextLine();
             try {
-                inputToDouble = Double.parseDouble(input);
+                salary = Double.parseDouble(input);
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || inputToDouble < 0);
-        setSalary(inputToDouble);
+        } while (hasError || salary < 0);
+        setSalary(salary);
     }
 
     @Override
     public void output() {
         super.output();
+        System.out.printf("%15s  |  ", roll);
+        System.out.print(startDate + "  |");
+        System.out.printf("%12.2f\n", salary);
     }
 
     @Override

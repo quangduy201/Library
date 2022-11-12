@@ -70,10 +70,10 @@ public class Book {
     public void input() {
         Scanner sc = new Scanner(System.in);
         String input;
-        String[] inputToArray;
-        Day inputToDay = new Day();
-        int inputToInt = 0;
-        double inputToDouble = 0.0;
+        String[] day;
+        Day publishDay = new Day();
+        int id = 0, remain = 0;
+        double price = 0.0;
         boolean hasError;
 
         do {
@@ -81,12 +81,12 @@ public class Book {
             System.out.print("Enter ID: ");
             input = sc.nextLine();
             try {
-                inputToInt = Integer.parseInt(input);
+                id = Integer.parseInt(input);
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || input.length() != 4 || inputToInt < 0);
-        setId(inputToInt);
+        } while (hasError || input.length() != 4 || id < 0);
+        setId(id);
 
         do {
             System.out.print("Enter name: ");
@@ -99,39 +99,39 @@ public class Book {
             System.out.print("Enter remain: ");
             input = sc.nextLine();
             try {
-                inputToInt = Integer.parseInt(input);
+                remain = Integer.parseInt(input);
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || inputToInt < 0);
-        setRemain(inputToInt);
+        } while (hasError || remain < 0);
+        setRemain(remain);
 
         do {
             hasError = false;
             System.out.print("Enter price: ");
             input = sc.nextLine();
             try {
-                inputToDouble = Double.parseDouble(input);
+                price = Double.parseDouble(input);
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || inputToDouble < 0.0);
-        setPrice(inputToDouble);
+        } while (hasError || price < 0.0);
+        setPrice(price);
 
         do {
             hasError = false;
             System.out.print("Enter publish day (dd/mm/yyyy): ");
             input = sc.nextLine();
-            inputToArray = input.split("/");
+            day = input.split("/");
             try {
-                inputToDay.setDate(Integer.parseInt(inputToArray[0]));
-                inputToDay.setMonth(Integer.parseInt(inputToArray[1]));
-                inputToDay.setYear(Integer.parseInt(inputToArray[2]));
+                publishDay.setDate(Integer.parseInt(day[0]));
+                publishDay.setMonth(Integer.parseInt(day[1]));
+                publishDay.setYear(Integer.parseInt(day[2]));
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || !Day.isValidDay(inputToDay));
-        setPublishDay(inputToDay);
+        } while (hasError || !Day.isValidDay(publishDay));
+        setPublishDay(publishDay);
     }
 
     public void output() {

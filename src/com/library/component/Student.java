@@ -60,31 +60,31 @@ public class Student extends Person {
     public void input() {
         super.input();
         Scanner sc = new Scanner(System.in);
-        String input;
+        String faculty, major, classroom;
 
         do {
             System.out.print("Enter faculty: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setFaculty(input);
+            faculty = sc.nextLine();
+        } while (faculty.isBlank());
+        setFaculty(faculty);
 
         do {
             System.out.print("Enter major: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setMajor(input);
+            major = sc.nextLine();
+        } while (major.isBlank());
+        setMajor(major);
 
         do {
             System.out.print("Enter classroom: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setClassroom(input);
+            classroom = sc.nextLine();
+        } while (classroom.isBlank());
+        setClassroom(classroom);
     }
 
     @Override
     public void output() {
         super.output();
-        System.out.printf("%25s  |  %25s  |  %25s  |  %s", school, faculty, major, classroom);
+        System.out.printf("%17s  |%25s  |%25s  |  %s\n", school, faculty, major, classroom);
     }
 
     @Override

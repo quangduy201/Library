@@ -29,13 +29,13 @@ public class Dictionary extends Book {
     public void input() {
         super.input();
         Scanner sc = new Scanner(System.in);
-        String input;
+        String language;
 
         do {
             System.out.print("Enter language: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setLanguage(input);
+            language = sc.nextLine();
+        } while (language.isBlank());
+        setLanguage(language);
     }
 
     @Override

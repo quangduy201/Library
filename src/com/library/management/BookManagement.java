@@ -134,9 +134,13 @@ public class BookManagement implements Management {
         book = findBook(id);
         if (book == null)
             System.out.println("Book not found!");
-        else
+        else {
+            String temp = "";
+            System.out.printf("   ID  %15s  NAME  %13s  REMAIN      PRICE  %4s  PUBLISH DAY  %14s  NOTE\n", temp, temp, temp, temp);
             book.output();
-        book.input();
+            System.out.println("\t\tEdit Book");
+            book.input();
+        }
     }
 
     @Override
@@ -177,7 +181,8 @@ public class BookManagement implements Management {
     public void find() {
         Scanner sc = new Scanner(System.in);
         String choice, input;
-        int inputToInt = 0;
+        String name;
+        int id = 0;
         double low = 0.0, high = 0.0;
         boolean hasError;
         Book[] book = new Book[1];
@@ -192,22 +197,22 @@ public class BookManagement implements Management {
                     System.out.print("Enter ID: ");
                     input = sc.nextLine();
                     try {
-                        inputToInt = Integer.parseInt(input);
+                        id = Integer.parseInt(input);
                     } catch (Exception e) {
                         hasError = true;
                     }
-                } while (hasError || input.length() != 4 || inputToInt < 0);
+                } while (hasError || input.length() != 4 || id < 0);
 
-                book[0] = findBook(inputToInt);
+                book[0] = findBook(id);
                 break;
             }
             if (choice.equals("2")) {   // Find Book by name
                 do {
                     System.out.print("Enter name: ");
-                    input = sc.nextLine();
-                } while (input.isBlank());
+                    name = sc.nextLine();
+                } while (name.isBlank());
 
-                book[0] = findBook(input);
+                book[0] = findBook(name);
                 break;
             }
             if (choice.equals("3")) {   // Find Book between prices
@@ -242,7 +247,7 @@ public class BookManagement implements Management {
             System.out.println("Book not found!");
         else {
             String temp = "";
-            System.out.printf("   ID  %15s  NAME  %13s  REMAIN      PRICE  %4s  PUBLISH DAY  %14s  NOTE\n", temp, temp, temp, temp);
+            System.out.printf("   ID %17s NAME %15s REMAIN      PRICE %6s PUBLISH DAY %16s NOTE\n", temp, temp, temp, temp);
             for (Book b : book)
                 b.output();
         }

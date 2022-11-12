@@ -115,6 +115,7 @@ public class Day {
 
     @Override
     public String toString() {
+        // dd/mm/yyyy
         return  ((date < 10) ? "0" : "") + date + "/" +
                 ((month < 10) ? "0" : "") + month + "/" +
                 year;

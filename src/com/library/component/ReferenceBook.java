@@ -40,19 +40,19 @@ public class ReferenceBook extends Book {
     public void input() {
         super.input();
         Scanner sc = new Scanner(System.in);
-        String input;
+        String author, translator;
 
         do {
             System.out.print("Enter author: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setAuthor(input);
+            author = sc.nextLine();
+        } while (author.isBlank());
+        setAuthor(author);
 
         do {
             System.out.print("Enter translator: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setTranslator(input);
+            translator = sc.nextLine();
+        } while (translator.isBlank());
+        setTranslator(translator);
     }
 
     @Override
