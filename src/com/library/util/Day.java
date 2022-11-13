@@ -1,5 +1,7 @@
 package com.library.util;
 
+import java.util.Scanner;
+
 public class Day {
     private int date, month, year;
 
@@ -79,7 +81,7 @@ public class Day {
     public static int calculateDays(Day day1, Day day2) {
         int days = 0;
         Day temp1, temp2;
-        /**
+        /*
          *      temp1 là ngày nhỏ hơn temp2 (ngày nhỏ hơn sẽ gán vào temp1)
          * nếu day1.year < day2.year thì gán day1 vào temp1 và ngược lại
          * nếu day1.year = day2.year thì xét tháng:
@@ -113,8 +115,37 @@ public class Day {
         return days;
     }
 
+    public static Day inputDay(String message) {
+        Scanner sc = new Scanner(System.in);
+        Day day = new Day();
+        boolean hasError;
+        do {
+            hasError = false;
+            System.out.print(message);
+            String input = sc.nextLine();
+            String[] splitInput = input.split("/");
+            try {
+                day.setDate(Integer.parseInt(splitInput[0]));
+                day.setMonth(Integer.parseInt(splitInput[1]));
+                day.setYear(Integer.parseInt(splitInput[2]));
+            } catch (Exception e) {
+                hasError = true;
+            }
+        } while (hasError || !Day.isValidDay(day));
+        return day;
+    }
+
+    public static Day parseDay(String s) {
+        String[] temp = s.split("/");
+        int date = Integer.parseInt(temp[0]);
+        int month = Integer.parseInt(temp[1]);
+        int year = Integer.parseInt(temp[2]);
+        return new Day(date, month, year);
+    }
+
     @Override
     public String toString() {
+        // dd/mm/yyyy
         return  ((date < 10) ? "0" : "") + date + "/" +
                 ((month < 10) ? "0" : "") + month + "/" +
                 year;

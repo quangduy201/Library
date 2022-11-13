@@ -39,20 +39,28 @@ public class ReferenceBook extends Book {
     @Override
     public void input() {
         super.input();
+        author = inputAuthor("Enter author: ");
+        translator = inputTranslator("Enter translator: ");
+    }
+
+    public static String inputAuthor(String message) {
         Scanner sc = new Scanner(System.in);
-        String input;
-
+        String author;
         do {
-            System.out.print("Enter author: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setAuthor(input);
+            System.out.print(message);
+            author = sc.nextLine();
+        } while (author.isBlank());
+        return author;
+    }
 
+    public static String inputTranslator(String message) {
+        Scanner sc = new Scanner(System.in);
+        String translator;
         do {
-            System.out.print("Enter translator: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setTranslator(input);
+            System.out.print(message);
+            translator = sc.nextLine();
+        } while (translator.isBlank());
+        return translator;
     }
 
     @Override
@@ -63,5 +71,13 @@ public class ReferenceBook extends Book {
 
     public void update() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "REF, " +
+                super.toString() +
+                author + ", " +
+                translator;
     }
 }

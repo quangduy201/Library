@@ -28,14 +28,17 @@ public class EducationBook extends Book {
     @Override
     public void input() {
         super.input();
-        Scanner sc = new Scanner(System.in);
-        String input;
+        publisher = inputPublisher("Enter publisher: ");
+    }
 
+    public static String inputPublisher(String message) {
+        Scanner sc = new Scanner(System.in);
+        String publisher;
         do {
-            System.out.print("Enter publisher: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setPublisher(input);
+            System.out.print(message);
+            publisher = sc.nextLine();
+        } while (publisher.isBlank());
+        return publisher;
     }
 
     @Override
@@ -46,5 +49,12 @@ public class EducationBook extends Book {
 
     public void update() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "EDU, " +
+                super.toString() +
+                publisher;
     }
 }

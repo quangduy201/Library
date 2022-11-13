@@ -59,36 +59,58 @@ public class Student extends Person {
     @Override
     public void input() {
         super.input();
+        faculty = inputFaculty("Enter faculty: ");
+        major = inputMajor("Enter major: ");
+        classroom = inputClassroom("Enter classroom: ");
+    }
+
+    public static String inputFaculty(String message) {
         Scanner sc = new Scanner(System.in);
-        String input;
-
+        String faculty;
         do {
-            System.out.print("Enter faculty: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setFaculty(input);
+            System.out.print(message);
+            faculty = sc.nextLine();
+        } while (faculty.isBlank());
+        return faculty;
+    }
 
+    public static String inputMajor(String message) {
+        Scanner sc = new Scanner(System.in);
+        String major;
         do {
-            System.out.print("Enter major: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setMajor(input);
+            System.out.print(message);
+            major = sc.nextLine();
+        } while (major.isBlank());
+        return major;
+    }
 
+    public static String inputClassroom(String message) {
+        Scanner sc = new Scanner(System.in);
+        String classroom;
         do {
-            System.out.print("Enter classroom: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setClassroom(input);
+            System.out.print(message);
+            classroom = sc.nextLine();
+        } while (classroom.isBlank());
+        return classroom;
     }
 
     @Override
     public void output() {
         super.output();
-        System.out.printf("%25s  |  %25s  |  %25s  |  %s", school, faculty, major, classroom);
+        System.out.printf("%17s  |%25s  |%25s  |  %s\n", school, faculty, major, classroom);
     }
 
     @Override
     public double calculatePrice(Day borrowDay, Day returnDay) {
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                school + ", " +
+                faculty + ", " +
+                major + ", " +
+                classroom;
     }
 }

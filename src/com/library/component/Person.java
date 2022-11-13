@@ -90,82 +90,121 @@ public abstract class Person {
     }
 
     public void input() {
+        id = inputId("Enter ID: ");
+        name = inputName("Enter name: ");
+        dob = inputDob("Enter date of birth (dd/mm/yyyy): ");
+        gender = inputGender("Enter gender (M|F): ");
+        phone = inputPhone("Enter phone (10 digits): ");
+        address = inputAddress("Enter address (city): ");
+        email = inputEmail("Enter email: ");
+    }
+
+    public static int inputId(String message) {
         Scanner sc = new Scanner(System.in);
         String input;
-        String[] inputToArray;
-        Day inputToDay = new Day();
-        int inputToInt = 0;
+        int id = 0;
         boolean hasError;
-
         do {
             hasError = false;
-            System.out.print("Enter ID: ");
+            System.out.print(message);
             input = sc.nextLine();
             try {
-                inputToInt = Integer.parseInt(input);
+                id = Integer.parseInt(input);
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || input.length() != 8 || inputToInt < 0);
-        setId(inputToInt);
+        } while (hasError || input.length() != 8 || id < 0);
+        return id;
+    }
 
+    public static String inputName(String message) {
+        Scanner sc = new Scanner(System.in);
+        String name;
         do {
-            System.out.print("Enter name: ");
-            input = sc.nextLine();
-        } while (input.length() == 0);
-        setName(input);
+            System.out.print(message);
+            name = sc.nextLine();
+        } while (name.length() == 0);
+        return name;
+    }
 
+    public static Day inputDob(String message) {
+        Scanner sc = new Scanner(System.in);
+        String input;
+        String[] day;
+        Day dob = new Day();
+        boolean hasError;
         do {
             hasError = false;
-            System.out.print("Enter date of birth (dd/mm/yyyy): ");
+            System.out.print(message);
             input = sc.nextLine();
-            inputToArray = input.split("/");
+            day = input.split("/");
             try {
-                inputToDay.setDate(Integer.parseInt(inputToArray[0]));
-                inputToDay.setMonth(Integer.parseInt(inputToArray[1]));
-                inputToDay.setYear(Integer.parseInt(inputToArray[2]));
+                dob.setDate(Integer.parseInt(day[0]));
+                dob.setMonth(Integer.parseInt(day[1]));
+                dob.setYear(Integer.parseInt(day[2]));
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || !Day.isValidDay(inputToDay));
-        setDob(inputToDay);
+        } while (hasError || !Day.isValidDay(dob));
+        return dob;
+    }
 
+    public static String inputGender(String message) {
+        Scanner sc = new Scanner(System.in);
+        String gender;
         do {
-            System.out.print("Enter gender (M|F): ");
-            input = sc.nextLine();
-        } while (!input.equals("M") && !input.equals("F"));
-        setGender(input);
+            System.out.print(message);
+            gender = sc.nextLine();
+        } while (!gender.equals("M") && !gender.equals("F"));
+        return gender;
+    }
 
+    public static String inputPhone(String message) {
+        Scanner sc = new Scanner(System.in);
+        String phone;
         do {
-            hasError = false;
-            System.out.print("Enter phone (10 digits): ");
-            input = sc.nextLine();
-            try {
-                inputToInt = Integer.parseInt(input);
-            } catch (Exception e) {
-                hasError = true;
-            }
-        } while (hasError || input.length() != 10 || inputToInt < 0);
-        setPhone(input);
+            System.out.print(message);
+            phone = sc.nextLine();
+        } while (phone.length() != 10);
+        return phone;
+    }
 
+    public static String inputAddress(String message) {
+        Scanner sc = new Scanner(System.in);
+        String address;
         do {
-            System.out.print("Enter address: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setAddress(input);
+            System.out.print(message);
+            address = sc.nextLine();
+        } while (address.isBlank());
+        return address;
+    }
 
+    public static String inputEmail(String message) {
+        Scanner sc = new Scanner(System.in);
+        String email;
         do {
-            System.out.print("Enter email: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setEmail(input);
+            System.out.print(message);
+            email = sc.nextLine();
+        } while (email.isBlank());
+        return email;
     }
 
     public void output() {
-        System.out.printf("  %8d  |  %30s  |  ", id, name);
+        System.out.printf("%10d  |%24s  |  ", id, name);
         System.out.print(dob + "  |");
-        System.out.printf("  %6s  |  %s  |  %30s  |  %30s  ", gender, phone, address, email);
+        System.out.printf("%6s  |%12s  |%18s  |%25s  |", gender, phone, address, email);
     }
 
     public abstract double calculatePrice(Day borrowDay, Day returnDay);
+
+    @Override
+    public String toString() {
+        return  id + ", " +
+                name + ", " +
+                dob + ", " +
+                gender + ", " +
+                phone + ", " +
+                address + ", " +
+                email + ", ";
+    }
 }

@@ -1,6 +1,5 @@
 package com.library.main;
 
-import com.library.component.EducationBook;
 import com.library.management.*;
 import com.library.ui.UI;
 
@@ -12,7 +11,10 @@ public class Library {
     private static StudentManagement studentMan;
     private static BorrowAndReturn borrowAndReturn;
     private static UI ui;
-    private static String line =    "------------------------------------------------------------------------------------------------------------------------";
+    private static String line =    "--------------------------------------------------" +
+                                    "--------------------------------------------------" +
+                                    "--------------------------------------------------" +
+                                    "--------------------------------------------------";
     private static String enterChoice = "Enter your choice: ";
     private static String mainMenu = """
                         SGU LIBRARY
@@ -63,19 +65,21 @@ public class Library {
             4. Statistic Bill
             5. Back
             """;
-    private static String bookMenu = """
-            1. Education Book
-            2. Reference Book
-            3. Dictionary
-            4. Back
-            """;
     private static String personMenu = """
             1. Student
             2. Employee
             3. Back
             """;
     public Library() {
-
+        bookMan = new BookManagement();
+        studentMan = new StudentManagement();
+        employeeMan = new EmployeeManagement();
+        borrowAndReturn = new BorrowAndReturn();
+//        ui = new UI();
+        bookMan.readFile();
+        studentMan.readFile();
+        employeeMan.readFile();
+        borrowAndReturn.readFile();
     }
 
     public static BookManagement getBookManagement() {
@@ -94,31 +98,34 @@ public class Library {
         return borrowAndReturn;
     }
 
-    public static UI getUi() {
+    public UI getUi() {
         return ui;
     }
 
+    public static void printMenu(String menu) {
+        System.out.println(line);
+        System.out.println(menu);
+        System.out.print(enterChoice);
+    }
+
+    public static void stopScreen() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("\nPress enter to continue...");
+        sc.nextLine();
+    }
+
     public static void main(String[] args) {
-        bookMan = new BookManagement();
-        studentMan = new StudentManagement();
-        employeeMan = new EmployeeManagement();
-        borrowAndReturn = new BorrowAndReturn();
-//        ui = new UI();
+        new Library();
         Scanner sc = new Scanner(System.in);
         String choice;
-        boolean hasError;
         while (true) {
-            System.out.println(line);
-            System.out.println(mainMenu);
-            System.out.print(enterChoice);
+            printMenu(mainMenu);
             choice = sc.nextLine();
 
             // BOOK MANAGEMENT
             if (choice.equals("1")) {
                 while (true) {
-                    System.out.println(line);
-                    System.out.println(bookManagementMenu);
-                    System.out.print(enterChoice);
+                    printMenu(bookManagementMenu);
                     choice = sc.nextLine();
 
                     if (choice.equals("1")) {   // Input Book
@@ -160,15 +167,14 @@ public class Library {
                         choice = "0";
                         break;
                     }
+                    stopScreen();
                 }
             }
 
             // STUDENT MANAGEMENT
             if (choice.equals("2")) {
                 while (true) {
-                    System.out.println(line);
-                    System.out.println(studentManagementMenu);
-                    System.out.print(enterChoice);
+                    printMenu(studentManagementMenu);
                     choice = sc.nextLine();
 
                     if (choice.equals("1")) {   // Input Student
@@ -195,12 +201,11 @@ public class Library {
                         System.out.println(line);
                         System.out.println("\t\t\tREMOVE STUDENT");
                         studentMan.remove();
-
                     }
                     if (choice.equals("6")) {   // Find Student
                         System.out.println(line);
                         System.out.println("\t\t\tFIND STUDENT");
-//                        studentMan.find();
+                        studentMan.find();
                     }
                     if (choice.equals("7")) {   // Statistic Student
                         System.out.println(line);
@@ -211,15 +216,14 @@ public class Library {
                         choice = "0";
                         break;
                     }
+                    stopScreen();
                 }
             }
 
             // EMPLOYEE MANAGEMENT
             if (choice.equals("3")) {
                 while (true) {
-                    System.out.println(line);
-                    System.out.println(employeeManagementMenu);
-                    System.out.print(enterChoice);
+                    printMenu(employeeManagementMenu);
                     choice = sc.nextLine();
 
                     if (choice.equals("1")) {   // Input Employee
@@ -250,7 +254,7 @@ public class Library {
                     if (choice.equals("6")) {   // Find Employee
                         System.out.println(line);
                         System.out.println("\t\t\tFIND EMPLOYEE");
-//                        employeeMan.find();
+                        employeeMan.find();
                     }
                     if (choice.equals("7")) {   // Statistic Employee
                         System.out.println(line);
@@ -261,31 +265,30 @@ public class Library {
                         choice = "0";
                         break;
                     }
+                    stopScreen();
                 }
             }
 
             // BORROW AND RETURN
             if (choice.equals("4")) {
                 while (true) {
-                    System.out.println(line);
-                    System.out.println(borrowAndReturnMenu);
-                    System.out.print(enterChoice);
+                    printMenu(borrowAndReturnMenu);
                     choice = sc.nextLine();
 
                     if (choice.equals("1")) {   // Borrow Book
                         System.out.println(line);
                         System.out.println("\t\t\tBORROW BOOK");
-//                        borrowAndReturn.borrowBook();
+                        borrowAndReturn.borrowBook();
                     }
                     if (choice.equals("2")) {   // Return Book
                         System.out.println(line);
                         System.out.println("\t\t\tRETURN BOOK");
-//                        borrowAndReturn.returnBook();
+                        borrowAndReturn.returnBook();
                     }
                     if (choice.equals("3")) {   // Find Bill
                         System.out.println(line);
                         System.out.println("\t\t\tFIND BILL");
-//                        borrowAndReturn.find();
+                        borrowAndReturn.find();
                     }
                     if (choice.equals("4")) {   // Statistic Bill
                         System.out.println(line);
@@ -296,6 +299,7 @@ public class Library {
                         choice = "0";
                         break;
                     }
+                    stopScreen();
                 }
             }
 
@@ -303,6 +307,7 @@ public class Library {
             if (choice.equals("5")) {
                 break;
             }
+            stopScreen();
         }
         System.out.println("See you later");
     }
