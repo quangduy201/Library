@@ -49,24 +49,30 @@ public class Employee extends Person {
 
     @Override
     public void input() {
-        super.input();
+        roll = inputRoll("Enter roll: ");
+        startDate = inputStartDate("Enter start date (dd/mm/yyyy): ");
+        salary = inputSalary("Enter salary: ");
+    }
+
+    public static String inputRoll(String message) {
+        Scanner sc = new Scanner(System.in);
+        String roll;
+        do {
+            System.out.print(message);
+            roll = sc.nextLine();
+        } while (roll.isBlank());
+        return roll;
+    }
+
+    public static Day inputStartDate(String message) {
         Scanner sc = new Scanner(System.in);
         String input;
         String[] day;
-        String roll;
         Day startDate = new Day();
-        double salary = 0.0;
         boolean hasError;
-
-        do {
-            System.out.print("Enter roll: ");
-            roll = sc.nextLine();
-        } while (roll.isBlank());
-        setRoll(roll);
-
         do {
             hasError = false;
-            System.out.print("Enter start date (dd/mm/yyyy): ");
+            System.out.print(message);
             input = sc.nextLine();
             day = input.split("/");
             try {
@@ -77,11 +83,17 @@ public class Employee extends Person {
                 hasError = true;
             }
         } while (hasError || !Day.isValidDay(startDate));
-        setStartDate(startDate);
+        return startDate;
+    }
 
+    public static double inputSalary(String message) {
+        Scanner sc = new Scanner(System.in);
+        String input;
+        double salary = 0.0;
+        boolean hasError;
         do {
             hasError = false;
-            System.out.print("Enter salary: ");
+            System.out.print(message);
             input = sc.nextLine();
             try {
                 salary = Double.parseDouble(input);
@@ -89,7 +101,7 @@ public class Employee extends Person {
                 hasError = true;
             }
         } while (hasError || salary < 0);
-        setSalary(salary);
+        return salary;
     }
 
     @Override
@@ -103,5 +115,13 @@ public class Employee extends Person {
     @Override
     public double calculatePrice(Day borrowDay, Day returnDay) {
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                roll + ", " +
+                startDate + ", " +
+                salary;
     }
 }

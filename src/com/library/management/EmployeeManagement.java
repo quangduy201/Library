@@ -1,11 +1,13 @@
 package com.library.management;
 
 import com.library.component.Employee;
+import com.library.util.Day;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class EmployeeManagement implements Management {
+public class EmployeeManagement implements Management, File {
     private Employee[] employees;
 
     public EmployeeManagement() {
@@ -43,10 +45,15 @@ public class EmployeeManagement implements Management {
             System.out.println("\t\t\tEMPLOYEE " + (i + 1));
             employees[i].input();
         }
+        writeFile();
     }
 
     @Override
     public void output() {
+        if (employees.length == 0) {
+            System.out.println("There are no employees yet.");
+            return;
+        }
         String temp = "";
         System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s ROLL %8s START DAY %6s SALARY\n", temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
         for (Employee employee : employees)
@@ -76,28 +83,13 @@ public class EmployeeManagement implements Management {
             System.out.println("\t\t\tEMPLOYEE " + (i - n + 1));
             employees[i].input();
         }
+        writeFile();
     }
 
     @Override
     public void edit() {
-        Scanner sc = new Scanner(System.in);
-        String input;
-        int id = 0;
-        boolean hasError;
-        Employee employee;
-
-        do {
-            hasError = false;
-            System.out.print("Enter ID: ");
-            input = sc.nextLine();
-            try {
-                id = Integer.parseInt(input);
-            } catch (Exception e) {
-                hasError = true;
-            }
-        } while (hasError || input.length() != 8 || id < 0);
-
-        employee = findEmployee(id);
+        int id = Employee.inputId("Enter ID: ");
+        Employee employee = findEmployee(id);
         if (employee == null)
             System.out.println("Employee not found!");
         else {
@@ -106,30 +98,16 @@ public class EmployeeManagement implements Management {
             employee.output();
             System.out.println("\t\tEdit employee");
             employee.input();
+            writeFile();
         }
     }
 
     @Override
     public void remove() {
-        Scanner sc = new Scanner(System.in);
-        String input;
-        int id = 0;
-        boolean hasError;
-
-        do {
-            hasError = false;
-            System.out.print("Enter ID: ");
-            input = sc.nextLine();
-            try {
-                id = Integer.parseInt(input);
-            } catch (Exception e) {
-                hasError = true;
-            }
-        } while (hasError || input.length() != 8 || id < 0);
-
+        int id = Employee.inputId("Enter ID: ");
         boolean isRemoved = false;
         for (int i = 0; i < employees.length; i++) {
-            if (employees[i].getId() == id) {
+            if (employees[i].getId() == id) {   // found the employee
                 String temp = "";
                 System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s ROLL %8s START DAY %6s SALARY\n", temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
                 employees[i].output();
@@ -140,8 +118,10 @@ public class EmployeeManagement implements Management {
                 break;
             }
         }
-        if (isRemoved)
+        if (isRemoved) {
             System.out.println("Book removed!");
+            writeFile();
+        }
         else
             System.out.println("Book not found!");
     }
@@ -149,10 +129,7 @@ public class EmployeeManagement implements Management {
     @Override
     public void find() {
         Scanner sc = new Scanner(System.in);
-        String choice, input;
-        int id = 0;
-        String name;
-        boolean hasError;
+        String choice;
         Employee employee;
 
         do {
@@ -163,26 +140,12 @@ public class EmployeeManagement implements Management {
             System.out.print("Enter your choice: ");
             choice = sc.nextLine();
             if (choice.equals("1")) {
-                do {
-                    hasError = false;
-                    System.out.print("Enter ID: ");
-                    input = sc.nextLine();
-                    try {
-                        id = Integer.parseInt(input);
-                    } catch (Exception e) {
-                        hasError = true;
-                    }
-                } while (hasError || input.length() != 8 || id < 0);
-
+                int id = Employee.inputId("Enter ID: ");
                 employee = findEmployee(id);
                 break;
             }
             if (choice.equals("2")) {
-                do {
-                    System.out.print("Enter name: ");
-                    name = sc.nextLine();
-                } while (name.isBlank());
-
+                String name = Employee.inputName("Enter name: ");
                 employee = findEmployee(name);
                 break;
             }
@@ -214,5 +177,46 @@ public class EmployeeManagement implements Management {
     @Override
     public void statistic() {
 
+    }
+
+    @Override
+    public void readFile() {
+        try {
+            FileReader file = new FileReader("res\\employees.dat");
+            BufferedReader reader = new BufferedReader(file);
+            String strLine;
+            while ((strLine = reader.readLine()) != null)
+                convertToObject(strLine);
+            reader.close();
+        } catch (Exception ignored) {}
+    }
+
+    @Override
+    public void writeFile() {
+        try {
+            FileWriter file = new FileWriter("res\\employees.dat");
+            BufferedWriter writer = new BufferedWriter(file);
+            for (Employee employee : employees)
+                writer.write(employee.toString() + "\n");
+            writer.close();
+        } catch (Exception ignored) {}
+    }
+
+    @Override
+    public void convertToObject(String line) {
+        String[] object = line.split(", ");
+        int id = Integer.parseInt(object[0]);
+        String name = object[1];
+        Day dob = Day.parseDay(object[2]);
+        String gender = object[3];
+        String phone = object[4];
+        String address = object[5];
+        String email = object[6];
+        String roll = object[7];
+        Day startDate = Day.parseDay(object[8]);
+        double salary = Double.parseDouble(object[9]);
+        Employee employee = new Employee(id, name, dob, gender, phone, address, email, roll, startDate, salary);
+        employees = Arrays.copyOf(employees, employees.length + 1);
+        employees[employees.length - 1] = employee;
     }
 }

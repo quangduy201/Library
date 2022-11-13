@@ -59,26 +59,39 @@ public class Student extends Person {
     @Override
     public void input() {
         super.input();
-        Scanner sc = new Scanner(System.in);
-        String faculty, major, classroom;
+        faculty = inputFaculty("Enter faculty: ");
+        major = inputMajor("Enter major: ");
+        classroom = inputClassroom("Enter classroom: ");
+    }
 
+    public static String inputFaculty(String message) {
+        Scanner sc = new Scanner(System.in);
+        String faculty;
         do {
-            System.out.print("Enter faculty: ");
+            System.out.print(message);
             faculty = sc.nextLine();
         } while (faculty.isBlank());
-        setFaculty(faculty);
+        return faculty;
+    }
 
+    public static String inputMajor(String message) {
+        Scanner sc = new Scanner(System.in);
+        String major;
         do {
-            System.out.print("Enter major: ");
+            System.out.print(message);
             major = sc.nextLine();
         } while (major.isBlank());
-        setMajor(major);
+        return major;
+    }
 
+    public static String inputClassroom(String message) {
+        Scanner sc = new Scanner(System.in);
+        String classroom;
         do {
-            System.out.print("Enter classroom: ");
+            System.out.print(message);
             classroom = sc.nextLine();
         } while (classroom.isBlank());
-        setClassroom(classroom);
+        return classroom;
     }
 
     @Override
@@ -90,5 +103,14 @@ public class Student extends Person {
     @Override
     public double calculatePrice(Day borrowDay, Day returnDay) {
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                school + ", " +
+                faculty + ", " +
+                major + ", " +
+                classroom;
     }
 }

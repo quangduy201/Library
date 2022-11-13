@@ -28,14 +28,17 @@ public class Dictionary extends Book {
     @Override
     public void input() {
         super.input();
+        language = inputLanguage("Enter language: ");
+    }
+
+    public static String inputLanguage(String message) {
         Scanner sc = new Scanner(System.in);
         String language;
-
         do {
-            System.out.print("Enter language: ");
+            System.out.print(message);
             language = sc.nextLine();
         } while (language.isBlank());
-        setLanguage(language);
+        return language;
     }
 
     @Override
@@ -46,5 +49,12 @@ public class Dictionary extends Book {
 
     public void update() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "DIC, " +
+                super.toString() +
+                language;
     }
 }

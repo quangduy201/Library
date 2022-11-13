@@ -68,17 +68,21 @@ public class Book {
     }
 
     public void input() {
+        id = inputId("Enter ID: ");
+        name = inputName("Enter name: ");
+        remain = inputRemain("Enter remain: ");
+        price = inputPrice("Enter price: ");
+        publishDay = inputPublishDay("Enter publish day (dd/mm/yyyy): ");
+    }
+
+    public static int inputId(String message) {
         Scanner sc = new Scanner(System.in);
         String input;
-        String[] day;
-        Day publishDay = new Day();
-        int id = 0, remain = 0;
-        double price = 0.0;
+        int id = 0;
         boolean hasError;
-
         do {
             hasError = false;
-            System.out.print("Enter ID: ");
+            System.out.print(message);
             input = sc.nextLine();
             try {
                 id = Integer.parseInt(input);
@@ -86,17 +90,27 @@ public class Book {
                 hasError = true;
             }
         } while (hasError || input.length() != 4 || id < 0);
-        setId(id);
+        return id;
+    }
 
+    public static String inputName(String message) {
+        Scanner sc = new Scanner(System.in);
+        String name;
         do {
-            System.out.print("Enter name: ");
-            input = sc.nextLine();
-        } while (input.isBlank());
-        setName(input);
+            System.out.print(message);
+            name = sc.nextLine();
+        } while (name.isBlank());
+        return name;
+    }
 
+    public static int inputRemain(String message) {
+        Scanner sc = new Scanner(System.in);
+        String input;
+        int remain = 0;
+        boolean hasError;
         do {
             hasError = false;
-            System.out.print("Enter remain: ");
+            System.out.print(message);
             input = sc.nextLine();
             try {
                 remain = Integer.parseInt(input);
@@ -104,11 +118,17 @@ public class Book {
                 hasError = true;
             }
         } while (hasError || remain < 0);
-        setRemain(remain);
+        return remain;
+    }
 
+    public static double inputPrice(String message) {
+        Scanner sc = new Scanner(System.in);
+        String input;
+        double price = 0.0;
+        boolean hasError;
         do {
             hasError = false;
-            System.out.print("Enter price: ");
+            System.out.print(message);
             input = sc.nextLine();
             try {
                 price = Double.parseDouble(input);
@@ -116,11 +136,18 @@ public class Book {
                 hasError = true;
             }
         } while (hasError || price < 0.0);
-        setPrice(price);
+        return price;
+    }
 
+    public static Day inputPublishDay(String message) {
+        Scanner sc = new Scanner(System.in);
+        String input;
+        String[] day;
+        Day publishDay = new Day();
+        boolean hasError;
         do {
             hasError = false;
-            System.out.print("Enter publish day (dd/mm/yyyy): ");
+            System.out.print(message);
             input = sc.nextLine();
             day = input.split("/");
             try {
@@ -131,11 +158,20 @@ public class Book {
                 hasError = true;
             }
         } while (hasError || !Day.isValidDay(publishDay));
-        setPublishDay(publishDay);
+        return publishDay;
     }
 
     public void output() {
         System.out.printf("  %4d  |  %30s  |  %4d  |  %10.2f  |  ", id, name, remain, price);
         System.out.print(publishDay + "  |  ");
+    }
+
+    @Override
+    public String toString() {
+        return  id + ", " +
+                name + ", " +
+                remain + ", " +
+                price + ", " +
+                publishDay + ", ";
     }
 }

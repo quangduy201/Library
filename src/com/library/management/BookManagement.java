@@ -4,21 +4,18 @@ import com.library.component.Book;
 import com.library.component.Dictionary;
 import com.library.component.EducationBook;
 import com.library.component.ReferenceBook;
+import com.library.util.Day;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class BookManagement implements Management {
+public class BookManagement implements Management, File {
     private Book[] books;
     private static String bookMenu = """
             1. Education Book
             2. Reference Book
             3. Dictionary
-            """;
-    private static String findMenu = """
-            1. Find Book by ID
-            2. Find Book by name
-            3. Find Book between prices
             """;
     public BookManagement() {
         this.books = new Book[0];
@@ -66,10 +63,15 @@ public class BookManagement implements Management {
             } while (books[i] == null);
             books[i].input();
         }
+        writeFile();
     }
 
     @Override
     public void output() {
+        if (books.length == 0) {
+            System.out.println("There are no books yet.");
+            return;
+        }
         String temp = "";
         System.out.printf("   ID  %15s  NAME  %13s  REMAIN      PRICE  %4s  PUBLISH DAY  %14s  NOTE\n", temp, temp, temp, temp);
         for (Book book : books)
@@ -110,28 +112,13 @@ public class BookManagement implements Management {
             } while (books[i] == null);
             books[i].input();
         }
+        writeFile();
     }
 
     @Override
     public void edit() {
-        Scanner sc = new Scanner(System.in);
-        String input;
-        int id = 0;
-        boolean hasError;
-        Book book;
-
-        do {
-            hasError = false;
-            System.out.print("Enter ID: ");
-            input = sc.nextLine();
-            try {
-                id = Integer.parseInt(input);
-            } catch (Exception e) {
-                hasError = true;
-            }
-        } while (hasError || input.length() != 4 || id < 0);
-
-        book = findBook(id);
+        int id = Book.inputId("Enter ID: ");
+        Book book = findBook(id);
         if (book == null)
             System.out.println("Book not found!");
         else {
@@ -140,30 +127,16 @@ public class BookManagement implements Management {
             book.output();
             System.out.println("\t\tEdit Book");
             book.input();
+            writeFile();
         }
     }
 
     @Override
     public void remove() {
-        Scanner sc = new Scanner(System.in);
-        String input;
-        int id = 0;
-        boolean hasError;
-
-        do {
-            hasError = false;
-            System.out.print("Enter ID: ");
-            input = sc.nextLine();
-            try {
-                id = Integer.parseInt(input);
-            } catch (Exception e) {
-                hasError = true;
-            }
-        } while (hasError || input.length() != 4 || id < 0);
-
+        int id = Book.inputId("Enter ID: ");
         boolean isRemoved = false;
         for (int i = 0; i < books.length; i++) {
-            if (books[i].getId() == id) {
+            if (books[i].getId() == id) {   // found the book
                 for (int j = i; j < books.length; j++)
                     books[j] = books[j + 1];
                 Arrays.copyOf(books, books.length - 1);
@@ -171,8 +144,10 @@ public class BookManagement implements Management {
                 break;
             }
         }
-        if (isRemoved)
+        if (isRemoved) {
             System.out.println("Book removed!");
+            writeFile();
+        }
         else
             System.out.println("Book not found!");
     }
@@ -180,64 +155,30 @@ public class BookManagement implements Management {
     @Override
     public void find() {
         Scanner sc = new Scanner(System.in);
-        String choice, input;
-        String name;
-        int id = 0;
-        double low = 0.0, high = 0.0;
-        boolean hasError;
+        String choice;
         Book[] book = new Book[1];
 
         do {
-            System.out.println(findMenu);
+            System.out.println("""
+                    1. Find Book by ID.
+                    2. Find Book by name.
+                    3. Find Book between low price and high price
+                    """);
             System.out.print("Enter your choice: ");
             choice = sc.nextLine();
             if (choice.equals("1")) {   // Find Book by ID
-                do {
-                    hasError = false;
-                    System.out.print("Enter ID: ");
-                    input = sc.nextLine();
-                    try {
-                        id = Integer.parseInt(input);
-                    } catch (Exception e) {
-                        hasError = true;
-                    }
-                } while (hasError || input.length() != 4 || id < 0);
-
+                int id = Book.inputId("Enter ID: ");
                 book[0] = findBook(id);
                 break;
             }
             if (choice.equals("2")) {   // Find Book by name
-                do {
-                    System.out.print("Enter name: ");
-                    name = sc.nextLine();
-                } while (name.isBlank());
-
+                String name = Book.inputName("Enter name: ");
                 book[0] = findBook(name);
                 break;
             }
             if (choice.equals("3")) {   // Find Book between prices
-                do {
-                    hasError = false;
-                    System.out.print("Enter low price");
-                    input = sc.nextLine();
-                    try {
-                        low = Double.parseDouble(input);
-                    } catch (Exception e) {
-                        hasError = true;
-                    }
-                } while (hasError || low < 0.0);
-
-                do {
-                    hasError = false;
-                    System.out.print("Enter high price");
-                    input = sc.nextLine();
-                    try {
-                        high = Double.parseDouble(input);
-                    } catch (Exception e) {
-                        hasError = true;
-                    }
-                } while (hasError || high < 0.0);
-
+                double low = Book.inputPrice("Enter low price");
+                double high = Book.inputPrice("Enter high price");
                 book = findBook(low, high);
                 break;
             }
@@ -281,5 +222,55 @@ public class BookManagement implements Management {
     @Override
     public void statistic() {
 
+    }
+
+    @Override
+    public void readFile() {
+        try {
+            FileReader file = new FileReader("res\\books.dat");
+            BufferedReader reader = new BufferedReader(file);
+            String strLine;
+            while ((strLine = reader.readLine()) != null)
+                convertToObject(strLine);
+            reader.close();
+        } catch (Exception ignored) {}
+    }
+
+    @Override
+    public void writeFile() {
+        try {
+            FileWriter file = new FileWriter("res\\books.dat");
+            BufferedWriter writer = new BufferedWriter(file);
+            for (Book book : books)
+                writer.write(book.toString() + "\n");
+            writer.close();
+        } catch (Exception ignored) {}
+    }
+
+    @Override
+    public void convertToObject(String line) {
+        String[] object = line.split(", ");
+        Book book = null;
+
+        int id = Integer.parseInt(object[1]);
+        String name = object[2];
+        int remain = Integer.parseInt(object[3]);
+        double price = Double.parseDouble(object[4]);
+        Day publishDay = Day.parseDay(object[5]);
+        if (object[0].equals("EDU")) {
+            String publisher = object[6];
+            book = new EducationBook(id, name, remain, price, publishDay, publisher);
+        }
+        if (object[0].equals("REF")) {
+            String author = object[6];
+            String translator = object[7];
+            book = new ReferenceBook(id, name, remain, price, publishDay, author, translator);
+        }
+        if (object[0].equals("DIC")) {
+            String language = object[6];
+            book = new Dictionary(id, name, remain, price, publishDay, language);
+        }
+        books = Arrays.copyOf(books, books.length + 1);
+        books[books.length - 1] = book;
     }
 }
