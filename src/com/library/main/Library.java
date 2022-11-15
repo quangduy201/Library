@@ -15,7 +15,6 @@ public class Library {
                                     "--------------------------------------------------" +
                                     "--------------------------------------------------" +
                                     "--------------------------------------------------";
-    private static String enterChoice = "Enter your choice: ";
     private static String mainMenu = """
                         SGU LIBRARY
             1. Book Management
@@ -105,7 +104,7 @@ public class Library {
     public static void printMenu(String menu) {
         System.out.println(line);
         System.out.println(menu);
-        System.out.print(enterChoice);
+        System.out.print("Enter your choice: ");
     }
 
     public static void stopScreen() {

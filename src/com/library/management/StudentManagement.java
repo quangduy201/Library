@@ -113,7 +113,7 @@ public class StudentManagement implements Management, File {
                 students[i].output();
                 for (int j = i; j < students.length; j++)
                     students[j] = students[j + 1];
-                Arrays.copyOf(students, students.length - 1);
+                students = Arrays.copyOf(students, students.length - 1);
                 isRemoved = true;
                 break;
             }
@@ -129,7 +129,7 @@ public class StudentManagement implements Management, File {
     @Override
     public void find() {
         Scanner sc = new Scanner(System.in);
-        String choice, input;
+        String choice;
         Student student;
 
         do {

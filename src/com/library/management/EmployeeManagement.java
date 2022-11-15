@@ -113,7 +113,7 @@ public class EmployeeManagement implements Management, File {
                 employees[i].output();
                 for (int j = i; j < employees.length; j++)
                     employees[j] = employees[j + 1];
-                Arrays.copyOf(employees, employees.length - 1);
+                employees = Arrays.copyOf(employees, employees.length - 1);
                 isRemoved = true;
                 break;
             }

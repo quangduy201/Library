@@ -139,7 +139,7 @@ public class BookManagement implements Management, File {
             if (books[i].getId() == id) {   // found the book
                 for (int j = i; j < books.length; j++)
                     books[j] = books[j + 1];
-                Arrays.copyOf(books, books.length - 1);
+                books = Arrays.copyOf(books, books.length - 1);
                 isRemoved = true;
                 break;
             }
