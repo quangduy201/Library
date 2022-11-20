@@ -49,6 +49,7 @@ public class Employee extends Person {
 
     @Override
     public void input() {
+        super.input();
         roll = inputRoll("Enter roll: ");
         startDate = inputStartDate("Enter start date (dd/mm/yyyy): ");
         salary = inputSalary("Enter salary: ");
@@ -79,10 +80,14 @@ public class Employee extends Person {
                 startDate.setDate(Integer.parseInt(day[0]));
                 startDate.setMonth(Integer.parseInt(day[1]));
                 startDate.setYear(Integer.parseInt(day[2]));
+                if (!Day.isValidDay(startDate)) {
+                    System.out.println("Start date is not valid!");
+                    hasError = true;
+                }
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || !Day.isValidDay(startDate));
+        } while (hasError);
         return startDate;
     }
 
@@ -97,10 +102,14 @@ public class Employee extends Person {
             input = sc.nextLine();
             try {
                 salary = Double.parseDouble(input);
+                if (salary < 0.0) {
+                    System.out.println("Salary must be a positive number!");
+                    hasError = true;
+                }
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || salary < 0);
+        } while (hasError);
         return salary;
     }
 

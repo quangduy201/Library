@@ -308,6 +308,5 @@ public class Library {
             }
             stopScreen();
         }
-        System.out.println("See you later");
     }
 }

@@ -29,6 +29,13 @@ public class BookManagement implements Management, File {
         this.books = books;
     }
 
+    public boolean idExists(int id) {
+        for (Book book : books)
+            if (id == book.getId())
+                return true;
+        return false;
+    }
+
     @Override
     public void input() {
         Scanner sc = new Scanner(System.in);
@@ -72,8 +79,7 @@ public class BookManagement implements Management, File {
             System.out.println("There are no books yet.");
             return;
         }
-        String temp = "";
-        System.out.printf("   ID  %15s  NAME  %13s  REMAIN      PRICE  %4s  PUBLISH DAY  %14s  NOTE\n", temp, temp, temp, temp);
+        System.out.printf("   ID  %15s  NAME  %13s  REMAIN      PRICE  %4s  PUBLISH DAY  %14s  NOTE\n", "", "", "", "");
         for (Book book : books)
             book.output();
     }
@@ -117,39 +123,69 @@ public class BookManagement implements Management, File {
 
     @Override
     public void edit() {
-        int id = Book.inputId("Enter ID: ");
+        Scanner sc = new Scanner(System.in);
+        int id = Book.inputId("Enter ID (4 digits): ");
         Book book = findBook(id);
         if (book == null)
             System.out.println("Book not found!");
         else {
-            String temp = "";
-            System.out.printf("   ID  %15s  NAME  %13s  REMAIN      PRICE  %4s  PUBLISH DAY  %14s  NOTE\n", temp, temp, temp, temp);
+            System.out.printf("   ID  %15s  NAME  %13s  REMAIN      PRICE  %4s  PUBLISH DAY  %14s  NOTE\n", "", "", "", "");
             book.output();
-            System.out.println("\t\tEdit Book");
-            book.input();
-            writeFile();
+            do {
+                System.out.println("""
+                        \n\tEdit?
+                        1. Yes
+                        2. No
+                        """);
+                System.out.print("Enter your choice: ");
+                String choice = sc.nextLine();
+                if (choice.equals("1")) {
+                    book.setId(0); // reset ID to be able to edit ID
+                    book.input();
+                    writeFile();
+                    break;
+                }
+                if (choice.equals("2"))
+                    break;
+            } while (true);
         }
     }
 
     @Override
     public void remove() {
-        int id = Book.inputId("Enter ID: ");
-        boolean isRemoved = false;
+        Scanner sc = new Scanner(System.in);
+        int id = Book.inputId("Enter ID (4 digits): ");
+        boolean found = false;
         for (int i = 0; i < books.length; i++) {
             if (books[i].getId() == id) {   // found the book
-                for (int j = i; j < books.length; j++)
-                    books[j] = books[j + 1];
-                books = Arrays.copyOf(books, books.length - 1);
-                isRemoved = true;
+                found = true;
+                System.out.printf("   ID  %15s  NAME  %13s  REMAIN      PRICE  %4s  PUBLISH DAY  %14s  NOTE\n", "", "", "", "");
+                books[i].output();
+                do {
+                    System.out.println("""
+                            \n\tRemove?
+                            1. Yes
+                            2. No
+                            """);
+                    System.out.print("Enter your choice: ");
+                    String choice = sc.nextLine();
+                    if (choice.equals("1")) {
+                        for (int j = i; j < books.length - 1; j++)
+                            books[j] = books[j + 1];
+                        books = Arrays.copyOf(books, books.length - 1);
+                        System.out.println("Book removed!");
+                        writeFile();
+                        break;
+                    }
+                    if (choice.equals("2"))
+                        break;
+                } while (true);
                 break;
             }
         }
-        if (isRemoved) {
-            System.out.println("Book removed!");
-            writeFile();
-        }
-        else
+        if (!found) {
             System.out.println("Book not found!");
+        }
     }
 
     @Override
@@ -167,7 +203,7 @@ public class BookManagement implements Management, File {
             System.out.print("Enter your choice: ");
             choice = sc.nextLine();
             if (choice.equals("1")) {   // Find Book by ID
-                int id = Book.inputId("Enter ID: ");
+                int id = Book.inputId("Enter ID (4 digits): ");
                 book[0] = findBook(id);
                 break;
             }
@@ -177,18 +213,17 @@ public class BookManagement implements Management, File {
                 break;
             }
             if (choice.equals("3")) {   // Find Book between prices
-                double low = Book.inputPrice("Enter low price");
-                double high = Book.inputPrice("Enter high price");
+                double low = Book.inputPrice("Enter low price: ");
+                double high = Book.inputPrice("Enter high price: ");
                 book = findBook(low, high);
                 break;
             }
         } while (true);
 
-        if (book.length == 0 || book[0] == null) // if find between prices not found || find by ID/name not found
+        if (book.length == 0 || book[0] == null) // if (find between prices not found || find by ID/name not found)
             System.out.println("Book not found!");
         else {
-            String temp = "";
-            System.out.printf("   ID %17s NAME %15s REMAIN      PRICE %6s PUBLISH DAY %16s NOTE\n", temp, temp, temp, temp);
+            System.out.printf("   ID %17s NAME %15s REMAIN      PRICE %6s PUBLISH DAY %16s NOTE\n", "", "", "", "");
             for (Book b : book)
                 b.output();
         }
@@ -203,7 +238,7 @@ public class BookManagement implements Management, File {
 
     public Book findBook(String name) {
         for (Book book : books)
-            if (book.getName().equals(name))
+            if (book.getName().equalsIgnoreCase(name))
                 return book;
         return null;
     }
@@ -221,7 +256,40 @@ public class BookManagement implements Management, File {
 
     @Override
     public void statistic() {
-
+        /*
+        TODO:
+            Thống kê số lượng sách theo từng thể loại
+            Tính phần trăm số lượng mỗi thể loại so với tổng số lượng sách
+         */
+        int n = books.length;
+        int edu = 0, eduRemain = 0;
+        int ref = 0, refRemain = 0;
+        int dic = 0, dicRemain = 0;
+        int all = 0, remain;
+        for (Book book : books) {
+            remain = book.getRemain();
+            if (book instanceof EducationBook) {
+                edu++;
+                eduRemain += remain;
+            }
+            if (book instanceof ReferenceBook) {
+                ref++;
+                refRemain += remain;
+            }
+            if (book instanceof Dictionary) {
+                dic++;
+                dicRemain += remain;
+            }
+            all += remain;
+        }
+        System.out.printf("Number of books: %d\n", n);
+        System.out.printf("Education books: %d\t--> %.2f%%\n", edu, edu * 100.0 / n);
+        System.out.printf("Reference books: %d\t--> %.2f%%\n", ref, ref * 100.0 / n);
+        System.out.printf("   Dictionaries: %d\t--> %.2f%%\n", dic, dic * 100.0 / n);
+        System.out.printf("\nNumber of remain books: %d\n", all);
+        System.out.printf("Remain education books: %d\t--> %.2f%%\n", eduRemain, eduRemain * 100.0 / all);
+        System.out.printf("Remain reference books: %d\t--> %.2f%%\n", refRemain, refRemain * 100.0 / all);
+        System.out.printf("   Remain dictionaries: %d\t--> %.2f%%\n", dicRemain, dicRemain * 100.0 / all);
     }
 
     @Override
