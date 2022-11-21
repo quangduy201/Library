@@ -101,8 +101,29 @@ public class Student extends Person {
     }
 
     @Override
-    public double calculatePrice(Day borrowDay, Day returnDay) {
-        return 0;
+    public double calculatePrice(Day borrowDay, Day returnDay, int numOfBooks) {
+        /*
+        Tính số tiền dựa theo số ngày:
+        - Trong 3 ngày đầu tiên, mỗi ngày giá tiền mỗi cuốn sách là 5000.
+        - Trong 3 ngày tiếp theo, mỗi ngày giá tiền mỗi cuốn sách là 6000.
+        - Những ngày sau đó mỗi ngày giá tiền mỗi cuốn sách là 10000.
+         */
+        int days = Day.calculateDays(borrowDay, returnDay);
+        double money = 0.0;
+        if (days - 3 < 0)
+            money += days * 5000 * numOfBooks;
+        else {
+            money += 3 * 5000 * numOfBooks;
+            days -= 3;
+            if (days - 3 < 0)
+                money += days * 6000 * numOfBooks;
+            else {
+                money += 3 * 6000 * numOfBooks;
+                days -= 3;
+                money += days * 10000 * numOfBooks;
+            }
+        }
+        return money;
     }
 
     @Override

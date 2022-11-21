@@ -22,6 +22,13 @@ public class EmployeeManagement implements Management, File {
         this.employees = employees;
     }
 
+    public boolean idExists(int id) {
+        for (Employee employee : employees)
+            if (id == employee.getId())
+                return true;
+        return false;
+    }
+
     @Override
     public void input() {
         Scanner sc = new Scanner(System.in);
@@ -54,8 +61,7 @@ public class EmployeeManagement implements Management, File {
             System.out.println("There are no employees yet.");
             return;
         }
-        String temp = "";
-        System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s ROLL %8s START DAY %6s SALARY\n", temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
+        System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s ROLL %8s START DAY %6s SALARY\n", "", "", "", "", "", "", "", "", "", "");
         for (Employee employee : employees)
             employee.output();
     }
@@ -71,11 +77,11 @@ public class EmployeeManagement implements Management, File {
             System.out.print("Enter number of employees: ");
             input = sc.nextLine();
             try {
-                n = Integer.parseInt(input);
+                k = Integer.parseInt(input);
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || n <= 0);
+        } while (hasError || k <= 0);
 
         employees = Arrays.copyOf(employees, employees.length + k);
         for (int i = n; i < employees.length; i++) {
@@ -88,42 +94,69 @@ public class EmployeeManagement implements Management, File {
 
     @Override
     public void edit() {
-        int id = Employee.inputId("Enter ID: ");
+        Scanner sc = new Scanner(System.in);
+        int id = Employee.inputId("Enter ID (8 digits): ");
         Employee employee = findEmployee(id);
         if (employee == null)
             System.out.println("Employee not found!");
         else {
-            String temp = "";
-            System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s ROLL %8s START DAY %6s SALARY\n", temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
+            System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s ROLL %8s START DAY %6s SALARY\n", "", "", "", "", "", "", "", "", "", "");
             employee.output();
-            System.out.println("\t\tEdit employee");
-            employee.input();
-            writeFile();
+            do {
+                System.out.println("""
+                        \n\tEdit?
+                        1. Yes
+                        2. No
+                        """);
+                System.out.print("Enter your choice: ");
+                String choice = sc.nextLine();
+                if (choice.equals("1")) {
+                    employee.setId(0); // reset ID to be able to edit ID
+                    employee.input();
+                    writeFile();
+                    break;
+                }
+                if (choice.equals("2"))
+                    break;
+            } while (true);
         }
     }
 
     @Override
     public void remove() {
-        int id = Employee.inputId("Enter ID: ");
-        boolean isRemoved = false;
+        Scanner sc = new Scanner(System.in);
+        int id = Employee.inputId("Enter ID (8 digits): ");
+        boolean found = false;
         for (int i = 0; i < employees.length; i++) {
             if (employees[i].getId() == id) {   // found the employee
-                String temp = "";
-                System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s ROLL %8s START DAY %6s SALARY\n", temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
+                found = true;
+                System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s ROLL %8s START DAY %6s SALARY\n", "", "", "", "", "", "", "", "", "", "");
                 employees[i].output();
-                for (int j = i; j < employees.length; j++)
-                    employees[j] = employees[j + 1];
-                Arrays.copyOf(employees, employees.length - 1);
-                isRemoved = true;
+                do {
+                    System.out.println("""
+                            \n\tRemove?
+                            1. Yes
+                            2. No
+                            """);
+                    System.out.print("Enter your choice: ");
+                    String choice = sc.nextLine();
+                    if (choice.equals("1")) {
+                        for (int j = i; j < employees.length - 1; j++)
+                            employees[j] = employees[j + 1];
+                        employees = Arrays.copyOf(employees, employees.length - 1);
+                        System.out.println("Employee removed!");
+                        writeFile();
+                        break;
+                    }
+                    if (choice.equals("2"))
+                        break;
+                } while (true);
                 break;
             }
         }
-        if (isRemoved) {
-            System.out.println("Book removed!");
-            writeFile();
+        if (!found) {
+            System.out.println("Employee not found!");
         }
-        else
-            System.out.println("Book not found!");
     }
 
     @Override
@@ -139,12 +172,12 @@ public class EmployeeManagement implements Management, File {
                     """);
             System.out.print("Enter your choice: ");
             choice = sc.nextLine();
-            if (choice.equals("1")) {
-                int id = Employee.inputId("Enter ID: ");
+            if (choice.equals("1")) {   // Find Employee by ID
+                int id = Employee.inputId("Enter ID (8 digits): ");
                 employee = findEmployee(id);
                 break;
             }
-            if (choice.equals("2")) {
+            if (choice.equals("2")) {   // Find Employee by name
                 String name = Employee.inputName("Enter name: ");
                 employee = findEmployee(name);
                 break;
@@ -152,10 +185,9 @@ public class EmployeeManagement implements Management, File {
         } while (true);
 
         if (employee == null)
-            System.out.println("Student not found!");
+            System.out.println("Employee not found!");
         else {
-            String temp = "";
-            System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s ROLL %8s START DAY %6s SALARY\n", temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
+            System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s ROLL %8s START DAY %6s SALARY\n", "", "", "", "", "", "", "", "", "", "");
             employee.output();
         }
     }
@@ -169,20 +201,60 @@ public class EmployeeManagement implements Management, File {
 
     public Employee findEmployee(String name) {
         for (Employee employee : employees)
-            if (employee.getName().equals(name))
+            if (employee.getName().equalsIgnoreCase(name))
                 return employee;
         return null;
     }
 
     @Override
     public void statistic() {
+        /*
+        TODO:
+            Thống kê số lượng nhân viên theo giới tính
+            Thống kê số lượng nhân viên theo chức vụ
+         */
+        int n = employees.length;
+        String[] rolls = new String[0];
+        int[] number = new int[0];
+        int male = 0, female = 0;
+        boolean rollExist;
+        for (int i = 0; i < n; i++) {
+            if (employees[i].getGender().equals("Nam"))
+                male++;
+            else
+                female++;
 
+            rollExist = false;
+            for (int j = 0; j < i; j++) {
+                if (employees[j].getRoll().equals(employees[i].getRoll())) {
+                    rollExist = true;
+                    number[j]++;
+                    break;
+                }
+            }
+            if (!rollExist) {
+                rolls = Arrays.copyOf(rolls, rolls.length + 1);
+                rolls[rolls.length - 1] = employees[i].getRoll();
+                number = Arrays.copyOf(number, number.length + 1);
+                number[rolls.length - 1] = 1;
+            }
+        }
+        System.out.printf("Number of employees: %d\n", n);
+        System.out.println("Gender:");
+        System.out.printf("%15s: %d\t--> %.2f%%\n", "Nam", male, male * 100.0 / n);
+        System.out.printf("%15s: %d\t--> %.2f%%\n", "Nữ", female, female * 100.0 / n);
+        System.out.println("Rolls:");
+        if (rolls.length == 0)
+            System.out.println("There are no employees yet!");
+        for (int i = 0; i < rolls.length; i++) {
+            System.out.printf("%15s: %d\t--> %.2f%%\n", rolls[i], number[i], number[i] * 100.0 / n);
+        }
     }
 
     @Override
     public void readFile() {
         try {
-            FileReader file = new FileReader("res\\employees.dat");
+            FileReader file = new FileReader("data\\employees.txt");
             BufferedReader reader = new BufferedReader(file);
             String strLine;
             while ((strLine = reader.readLine()) != null)
@@ -194,7 +266,7 @@ public class EmployeeManagement implements Management, File {
     @Override
     public void writeFile() {
         try {
-            FileWriter file = new FileWriter("res\\employees.dat");
+            FileWriter file = new FileWriter("data\\employees.txt");
             BufferedWriter writer = new BufferedWriter(file);
             for (Employee employee : employees)
                 writer.write(employee.toString() + "\n");

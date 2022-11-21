@@ -47,10 +47,6 @@ public class EducationBook extends Book {
         System.out.printf("%30s\n", publisher);
     }
 
-    public void update() {
-
-    }
-
     @Override
     public String toString() {
         return "EDU, " +

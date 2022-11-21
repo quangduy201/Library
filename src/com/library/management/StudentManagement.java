@@ -22,6 +22,13 @@ public class StudentManagement implements Management, File {
         this.students = students;
     }
 
+    public boolean idExists(int id) {
+        for (Student student : students)
+            if (id == student.getId())
+                return true;
+        return false;
+    }
+
     @Override
     public void input() {
         Scanner sc = new Scanner(System.in);
@@ -54,8 +61,7 @@ public class StudentManagement implements Management, File {
             System.out.println("There are no students yet.");
             return;
         }
-        String temp = "";
-        System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s SCHOOL %17s FACULTY %20s MAJOR %10s CLASSROOM\n", temp, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
+        System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s SCHOOL %17s FACULTY %20s MAJOR %10s CLASSROOM\n", "", "", "", "", "", "", "", "", "", "", "");
         for (Student student : students)
             student.output();
     }
@@ -71,11 +77,11 @@ public class StudentManagement implements Management, File {
             System.out.print("Enter number of students: ");
             input = sc.nextLine();
             try {
-                n = Integer.parseInt(input);
+                k = Integer.parseInt(input);
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || n <= 0);
+        } while (hasError || k <= 0);
 
         students = Arrays.copyOf(students, students.length + k);
         for (int i = n; i < students.length; i++) {
@@ -88,48 +94,75 @@ public class StudentManagement implements Management, File {
 
     @Override
     public void edit() {
-        int id = Student.inputId("Enter ID: ");
+        Scanner sc = new Scanner(System.in);
+        int id = Student.inputId("Enter ID (8 digits): ");
         Student student = findStudent(id);
         if (student == null)
             System.out.println("Student not found!");
         else {
-            String temp = "";
-            System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s SCHOOL %17s FACULTY %20s MAJOR %10s CLASSROOM\n", temp, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
+            System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s SCHOOL %17s FACULTY %20s MAJOR %10s CLASSROOM\n", "", "", "", "", "", "", "", "", "", "", "");
             student.output();
-            System.out.println("\t\tEdit student");
-            student.input();
-            writeFile();
+            do {
+                System.out.println("""
+                        \n\tEdit?
+                        1. Yes
+                        2. No
+                        """);
+                System.out.print("Enter your choice: ");
+                String choice = sc.nextLine();
+                if (choice.equals("1")) {
+                    student.setId(0); // reset ID to be able to edit ID
+                    student.input();
+                    writeFile();
+                    break;
+                }
+                if (choice.equals("2"))
+                    break;
+            } while (true);
         }
     }
 
     @Override
     public void remove() {
-        int id = Student.inputId("Enter ID: ");
-        boolean isRemoved = false;
+        Scanner sc = new Scanner(System.in);
+        int id = Student.inputId("Enter ID (8 digits): ");
+        boolean found = false;
         for (int i = 0; i < students.length; i++) {
             if (students[i].getId() == id) {    // found the student
-                String temp = "";
-                System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s SCHOOL %17s FACULTY %20s MAJOR %10s CLASSROOM\n", temp, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
+                found = true;
+                System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s SCHOOL %17s FACULTY %20s MAJOR %10s CLASSROOM\n", "", "", "", "", "", "", "", "", "", "", "");
                 students[i].output();
-                for (int j = i; j < students.length; j++)
-                    students[j] = students[j + 1];
-                Arrays.copyOf(students, students.length - 1);
-                isRemoved = true;
+                do {
+                    System.out.println("""
+                            \n\tRemove?
+                            1. Yes
+                            2. No
+                            """);
+                    System.out.print("Enter your choice: ");
+                    String choice = sc.nextLine();
+                    if (choice.equals("1")) {
+                        for (int j = i; j < students.length - 1; j++)
+                            students[j] = students[j + 1];
+                        students = Arrays.copyOf(students, students.length - 1);
+                        System.out.println("Student removed!");
+                        writeFile();
+                        break;
+                    }
+                    if (choice.equals("2"))
+                        break;
+                } while (true);
                 break;
             }
         }
-        if (isRemoved) {
-            System.out.println("Book removed!");
-            writeFile();
+        if (!found) {
+            System.out.println("Student not found!");
         }
-        else
-            System.out.println("Book not found!");
     }
 
     @Override
     public void find() {
         Scanner sc = new Scanner(System.in);
-        String choice, input;
+        String choice;
         Student student;
 
         do {
@@ -139,12 +172,12 @@ public class StudentManagement implements Management, File {
                     """);
             System.out.print("Enter your choice: ");
             choice = sc.nextLine();
-            if (choice.equals("1")) {
-                int id = Student.inputId("Enter ID: ");
+            if (choice.equals("1")) {   // Find Student by ID
+                int id = Student.inputId("Enter ID (8 digits): ");
                 student = findStudent(id);
                 break;
             }
-            if (choice.equals("2")) {
+            if (choice.equals("2")) {   // Find Student by name
                 String name = Student.inputName("Enter name: ");
                 student = findStudent(name);
                 break;
@@ -154,8 +187,7 @@ public class StudentManagement implements Management, File {
         if (student == null)
             System.out.println("Student not found!");
         else {
-            String temp = "";
-            System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s SCHOOL %17s FACULTY %20s MAJOR %10s CLASSROOM\n", temp, temp, temp, temp, temp, temp, temp, temp, temp, temp, temp);
+            System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s SCHOOL %17s FACULTY %20s MAJOR %10s CLASSROOM\n", "", "", "", "", "", "", "", "", "", "", "");
             student.output();
         }
     }
@@ -169,20 +201,60 @@ public class StudentManagement implements Management, File {
 
     public Student findStudent(String name) {
         for (Student student : students)
-            if (student.getName().equals(name))
+            if (student.getName().equalsIgnoreCase(name))
                 return student;
         return null;
     }
 
     @Override
     public void statistic() {
+        /*
+        TODO:
+             Thống kê số lượng sinh viên theo giới tính
+             Thống kê số lượng sinh viên theo khoa
+         */
+        int n = students.length;
+        String[] faculties = new String[0];
+        int[] number = new int[0];
+        int male = 0, female = 0;
+        boolean facultyExist;
+        for (int i = 0; i < n; i++) {
+            if (students[i].getGender().equals("Nam"))
+                male++;
+            else
+                female++;
 
+            facultyExist = false;
+            for (int j = 0; j < i; j++) {
+                if (students[j].getFaculty().equals(students[i].getFaculty())) {
+                    facultyExist = true;
+                    number[j]++;
+                    break;
+                }
+            }
+            if (!facultyExist) {
+                faculties = Arrays.copyOf(faculties, faculties.length + 1);
+                faculties[faculties.length - 1] = students[i].getFaculty();
+                number = Arrays.copyOf(number, number.length + 1);
+                number[number.length - 1] = 1;
+            }
+        }
+        System.out.printf("Number of students: %d\n", n);
+        System.out.println("Gender:");
+        System.out.printf("%25s: %d\t--> %.2f%%\n", "Nam", male, male * 100.0 / n);
+        System.out.printf("%25s: %d\t--> %.2f%%\n", "Nữ", female, female * 100.0 / n);
+        System.out.println("Faculty:");
+        if (faculties.length == 0)
+            System.out.println("\tThere are no students yet!");
+        for (int i = 0; i < faculties.length; i++) {
+            System.out.printf("%25s: %d\t--> %.2f%%\n", faculties[i], number[i], number[i] * 100.0 / n);
+        }
     }
 
     @Override
     public void readFile() {
         try {
-            FileReader file = new FileReader("res\\students.dat");
+            FileReader file = new FileReader("data\\students.txt");
             BufferedReader reader = new BufferedReader(file);
             String strLine;
             while ((strLine = reader.readLine()) != null)
@@ -194,7 +266,7 @@ public class StudentManagement implements Management, File {
     @Override
     public void writeFile() {
         try {
-            FileWriter file = new FileWriter("res\\students.dat");
+            FileWriter file = new FileWriter("data\\students.txt");
             BufferedWriter writer = new BufferedWriter(file);
             for (Student student : students)
                 writer.write(student.toString() + "\n");
@@ -215,8 +287,8 @@ public class StudentManagement implements Management, File {
         String faculty = object[8];
         String major = object[9];
         String classroom = object[10];
-        Student employee = new Student(id, name, dob, gender, phone, address, email, faculty, major, classroom);
+        Student student = new Student(id, name, dob, gender, phone, address, email, faculty, major, classroom);
         students = Arrays.copyOf(students, students.length + 1);
-        students[students.length - 1] = employee;
+        students[students.length - 1] = student;
     }
 }

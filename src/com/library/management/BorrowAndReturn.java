@@ -15,6 +15,10 @@ public class BorrowAndReturn implements File {
         bills = new Bill[0];
     }
 
+    public static Bill[] getBills() {
+        return bills;
+    }
+
     public void borrowBook() {
         Scanner sc = new Scanner(System.in);
         boolean hasError;
@@ -22,30 +26,14 @@ public class BorrowAndReturn implements File {
         // INPUT PERSON
         Person person;
         do {
-            System.out.print("""
-                    1. Student
-                    2. Employee
-                    """);
-            System.out.print("Enter your choice: ");
-            String choice = sc.nextLine();
-
-            if (choice.equals("1")) {
-                int id = Person.inputId("Enter student ID: ");
-                person = Library.getStudentManagement().findStudent(id);
-                if (person == null)
-                    System.out.println("Student not found!");
-                else
-                    break;
-            }
-            if (choice.equals("2")) {
-                int id = Person.inputId("Enter employee ID: ");
+            int id = Person.inputId("Enter person ID: ");
+            person = Library.getStudentManagement().findStudent(id);
+            if (person == null) {
                 person = Library.getEmployeeManagement().findEmployee(id);
                 if (person == null)
-                    System.out.println("Employee not found!");
-                else
-                    break;
+                    System.out.println("Person not found!");
             }
-        } while (true);
+        } while (person == null);
 
         // INPUT NUMBER OF BOOKS
         int n = 0;
@@ -87,44 +75,84 @@ public class BorrowAndReturn implements File {
         Day returnDay = Day.inputDay("Enter return day: ");
 
         // CALCULATE PRICE
-        double price = person.calculatePrice(borrowDay, returnDay);
+        double price = person.calculatePrice(borrowDay, returnDay, books.length);
 
         // CREATE NEW BILL
         bills = Arrays.copyOf(bills, bills.length + 1);
-        bills[bills.length - 1] = new Bill(person, books, borrowDay, returnDay, price);
+        bills[bills.length - 1] = new Bill("Borrowed", person, books, borrowDay, returnDay, price);
+        writeFile();
     }
 
     public void returnBook() {
+        // INPUT PERSON
+        int id = Person.inputId("Enter person ID: ");
+        Person person = Library.getStudentManagement().findStudent(id);
+        if (person == null) {
+            person = Library.getEmployeeManagement().findEmployee(id);
+            if (person == null) {
+                System.out.println("Person not found!");
+                return;
+            }
+        }
+
+        // FIND BILLS OF PERSON
+        Bill[] billList = new Bill[0];
+        for (Bill bill : bills) {
+            if (bill.getPerson() == person && bill.getMode().equals("Borrowed")) {
+                billList = Arrays.copyOf(billList, billList.length + 1);
+                billList[billList.length - 1] = bill;
+            }
+        }
+        if (billList.length == 0) {
+            System.out.println("This person did not borrow any books.");
+            return;
+        }
+
+        // CHOOSE WHICH BILL TO CHECK
+        for (int i = 0; i < billList.length; i++) {
+            System.out.println(i + 1);
+            billList[i].output();
+        }
         Scanner sc = new Scanner(System.in);
         boolean hasError;
-
-        // INPUT NUMBER OF BOOKS
-        int n = 0;
+        int index = 0;
         do {
             hasError = false;
-            System.out.print("Enter number of books: ");
+            System.out.print("Choose which one: ");
             String input = sc.nextLine();
             try {
-                n = Integer.parseInt(input);
+                index = Integer.parseInt(input);
+                if (index <= 0 || index > billList.length)
+                    hasError = true;
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || n <= 0);
+        } while (hasError);
+        index--;
 
-        // INPUT BOOKS
-        Book[] books = new Book[n];
-        for (int i = 0; i < n; i++) {
-            do {
-                System.out.println("\t\t\tBOOK " + (i + 1));
-                int id = Book.inputId("Enter book ID: ");
-                books[i] = Library.getBookManagement().findBook(id);
-                if (books[i] == null)
-                    System.out.println("Book not found!");
-            } while (books[i] == null);
-
-            int remain = books[i].getRemain();
-            books[i].setRemain(remain + 1);
-        }
+        // CONFIRM
+        do {
+            System.out.println("""
+                \n\tAre you sure?
+                1. Yes
+                2. No
+                """);
+            System.out.print("Enter your choice: ");
+            String choice = sc.nextLine();
+            if (choice.equals("1")) {
+                billList[index].hasReturned();
+                Book[] books = billList[index].getBooks();
+                for (Book book : books) {
+                    int remain = book.getRemain();
+                    book.setRemain(remain + 1);
+                }
+                System.out.println("Books have been returned!");
+                writeFile();
+                break;
+            }
+            if (choice.equals("2"))
+                break;
+        } while (true);
     }
 
     public void find() {
@@ -144,7 +172,7 @@ public class BorrowAndReturn implements File {
                 billList = findBill(id);
                 break;
             }
-            if (choice.equals("2")) {
+            if (choice.equals("2")) {   // Find Bill between low day and high day
                 Day low = Day.inputDay("Enter low day (dd/mm/yyyy): ");
                 Day high = Day.inputDay("Enter high day (dd/mm/yyyy): ");
                 billList = findBill(low, high);
@@ -156,16 +184,16 @@ public class BorrowAndReturn implements File {
             System.out.println("Bill not found!");
         else {
             String temp = "";
-//            System.out.printf("");
+            System.out.printf("");
             for (Bill bill : billList)
                 bill.output();
         }
     }
 
-    public Bill[] findBill(int id) {
+    public Bill[] findBill(int personId) {
         Bill[] listBill = new Bill[0];
         for (Bill bill : bills) {
-            if (bill.getPerson().getId() == id) {
+            if (bill.getPerson().getId() == personId) {
                 listBill = Arrays.copyOf(listBill, listBill.length + 1);
                 listBill[listBill.length - 1] = bill;
             }
@@ -191,14 +219,38 @@ public class BorrowAndReturn implements File {
         return listBill;
     }
 
-    public void statistic(){
-
+    public void statistic() {
+        /*
+        TODO:
+            Thống kê số lượng mượn/trả sách
+            Thống kê số lượng người mượn là sinh viên hay nhân viên
+            Thống kê số lượng người đã trả
+            Tính tổng số tiền
+         */
+        int n = bills.length;
+        int student = 0, employee = 0, returned = 0;
+        double total = 0.0;
+        for (Bill bill : bills) {
+            if (bill.getPerson() instanceof Student)
+                student++;
+            if (bill.getPerson() instanceof Employee)
+                employee++;
+            if (bill.getMode().equals("Returned"))
+                returned++;
+            total += bill.getPrice();
+        }
+        System.out.printf("Number of bills: %d\n", n);
+        System.out.printf("Student borrow:  %d\t--> %.2f%%\n", student, student * 100.0 / n);
+        System.out.printf("Employee borrow: %d\t--> %.2f%%\n", employee, employee * 100.0 / n);
+        System.out.printf("Have returned:     %d\t--> %.2f%%\n", returned, returned * 100.0 / n);
+        System.out.printf("Have not returned: %d\t--> %.2f%%\n", n - returned, (n - returned) * 100.0 / n);
+        System.out.printf("Total: %.2f\n", total);
     }
 
     @Override
     public void readFile() {
         try {
-            FileReader file = new FileReader("res\\bills.dat");
+            FileReader file = new FileReader("data\\bills.txt");
             BufferedReader reader = new BufferedReader(file);
             String strLine;
             while ((strLine = reader.readLine()) != null)
@@ -210,7 +262,7 @@ public class BorrowAndReturn implements File {
     @Override
     public void writeFile() {
         try {
-            FileWriter file = new FileWriter("res\\bills.dat");
+            FileWriter file = new FileWriter("data\\bills.txt");
             BufferedWriter writer = new BufferedWriter(file);
             for (Bill bill : bills)
                 writer.write(bill.toString() + "\n");
@@ -221,12 +273,19 @@ public class BorrowAndReturn implements File {
     @Override
     public void convertToObject(String line) {
         String[] object = line.split(", ");
-        int personId = Integer.parseInt(object[0]);
-        String personName = object[1];
-        String[] bookList = object[2].split(" / ");
-        Day borrowDay = Day.parseDay(object[3]);
-        Day returnDay = Day.parseDay(object[4]);
-        double price = Double.parseDouble(object[5]);
+        String mode = object[0];
+        int personId = Integer.parseInt(object[1]);
+        String personName = object[2];
+        String[] bookList = object[3].split(" / ");
+        Day borrowDay = Day.parseDay(object[4]);
+        Day returnDay = Day.parseDay(object[5]);
+        double price = Double.parseDouble(object[6]);
+
+        int borrow;
+        if (mode.equals("Borrowed"))
+            borrow = 1;
+        else
+            borrow = 0;
 
         Person person = Library.getStudentManagement().findStudent(personId);
         if (person == null)
@@ -235,9 +294,10 @@ public class BorrowAndReturn implements File {
         Book[] books = new Book[bookList.length];
         for (int i = 0; i < books.length; i++) {
             books[i] = Library.getBookManagement().findBook(bookList[i]);
+            books[i].setRemain(books[i].getRemain() - borrow);
         }
 
-        Bill bill = new Bill(person, books, borrowDay, returnDay, price);
+        Bill bill = new Bill(mode, person, books, borrowDay, returnDay, price);
         bills = Arrays.copyOf(bills, bills.length + 1);
         bills[bills.length - 1] = bill;
     }

@@ -1,0 +1,4 @@
+10000001, Đinh Quang Duy, 20/01/2003, Nam, 0938111523, TP Hồ Chí Minh, dinhduy2012003@gmail.com, Đại học Sài Gòn, Công nghệ thông tin, Kỹ thuật phần mềm, DCT1211
+10000002, Nguyễn Hoàng Long, 30/08/2003, Nam, 0987654321, TP Hồ Chí Minh, colong30082003@gmail.com, Đại học Sài Gòn, Công nghệ thông tin, Hệ thống thông tin, DCT1216
+10000003, Nguyễn Zi Đan, 06/03/2003, Nam, 0372668600, Tuy Hòa, danquabao@gmail.com, Đại học Sài Gòn, Công nghệ thông tin, Kỹ thuật phần mềm, DCT1211
+10000004, Nguyễn Tiến Dũng, 19/12/2003, Nam, 0987654321, Hà Tĩnh, tiendung@gmail.com, Đại học Sài Gòn, Công nghệ thông tin, Khoa học máy tính, DCT1211

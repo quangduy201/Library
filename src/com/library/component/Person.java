@@ -1,5 +1,6 @@
 package com.library.component;
 
+import com.library.main.Library;
 import com.library.util.Day;
 
 import java.util.Scanner;
@@ -90,10 +91,18 @@ public abstract class Person {
     }
 
     public void input() {
-        id = inputId("Enter ID: ");
+        int id;
+        do {
+            id = inputId("Enter ID (8 digits): ");
+            if (Library.getStudentManagement().idExists(id) || Library.getEmployeeManagement().idExists(id))
+                System.out.println("ID has been used!");
+            else
+                break;
+        } while (true);
+        this.id = id;
         name = inputName("Enter name: ");
         dob = inputDob("Enter date of birth (dd/mm/yyyy): ");
-        gender = inputGender("Enter gender (M|F): ");
+        gender = inputGender("Enter gender (Nam|Nữ): ");
         phone = inputPhone("Enter phone (10 digits): ");
         address = inputAddress("Enter address (city): ");
         email = inputEmail("Enter email: ");
@@ -110,10 +119,17 @@ public abstract class Person {
             input = sc.nextLine();
             try {
                 id = Integer.parseInt(input);
+                if (input.length() != 8) {
+                    System.out.println("ID must have 8 digits!");
+                    hasError = true;
+                } else if (id < 0) {
+                    System.out.println("ID must be a positive number!");
+                    hasError = true;
+                }
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || input.length() != 8 || id < 0);
+        } while (hasError);
         return id;
     }
 
@@ -142,6 +158,10 @@ public abstract class Person {
                 dob.setDate(Integer.parseInt(day[0]));
                 dob.setMonth(Integer.parseInt(day[1]));
                 dob.setYear(Integer.parseInt(day[2]));
+                if (!Day.isValidDay(dob)) {
+                    System.out.println("Date of birth is not valid!");
+                    hasError = true;
+                }
             } catch (Exception e) {
                 hasError = true;
             }
@@ -152,20 +172,36 @@ public abstract class Person {
     public static String inputGender(String message) {
         Scanner sc = new Scanner(System.in);
         String gender;
+        boolean hasError;
         do {
+            hasError = false;
             System.out.print(message);
             gender = sc.nextLine();
-        } while (!gender.equals("M") && !gender.equals("F"));
+            if (!gender.equalsIgnoreCase("Nam") && !gender.equalsIgnoreCase("Nữ")) {
+                System.out.println("Gender must be \"Nam\" or \"Nữ\"!");
+                hasError = true;
+            }
+        } while (hasError);
+        if (gender.equalsIgnoreCase("Nam"))
+            gender = "Nam";
+        else
+            gender = "Nữ";
         return gender;
     }
 
     public static String inputPhone(String message) {
         Scanner sc = new Scanner(System.in);
         String phone;
+        boolean hasError;
         do {
+            hasError = false;
             System.out.print(message);
             phone = sc.nextLine();
-        } while (phone.length() != 10);
+            if (phone.length() != 10) {
+                System.out.println("Phone number must have 10 digits!");
+                hasError = true;
+            }
+        } while (hasError);
         return phone;
     }
 
@@ -195,7 +231,7 @@ public abstract class Person {
         System.out.printf("%6s  |%12s  |%18s  |%25s  |", gender, phone, address, email);
     }
 
-    public abstract double calculatePrice(Day borrowDay, Day returnDay);
+    public abstract double calculatePrice(Day borrowDay, Day returnDay, int numOfBooks);
 
     @Override
     public String toString() {

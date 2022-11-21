@@ -1,7 +1,6 @@
 package com.library.main;
 
 import com.library.management.*;
-import com.library.ui.UI;
 
 import java.util.Scanner;
 
@@ -10,12 +9,10 @@ public class Library {
     private static EmployeeManagement employeeMan;
     private static StudentManagement studentMan;
     private static BorrowAndReturn borrowAndReturn;
-    private static UI ui;
     private static String line =    "--------------------------------------------------" +
                                     "--------------------------------------------------" +
                                     "--------------------------------------------------" +
                                     "--------------------------------------------------";
-    private static String enterChoice = "Enter your choice: ";
     private static String mainMenu = """
                         SGU LIBRARY
             1. Book Management
@@ -65,17 +62,12 @@ public class Library {
             4. Statistic Bill
             5. Back
             """;
-    private static String personMenu = """
-            1. Student
-            2. Employee
-            3. Back
-            """;
+
     public Library() {
         bookMan = new BookManagement();
         studentMan = new StudentManagement();
         employeeMan = new EmployeeManagement();
         borrowAndReturn = new BorrowAndReturn();
-//        ui = new UI();
         bookMan.readFile();
         studentMan.readFile();
         employeeMan.readFile();
@@ -98,14 +90,10 @@ public class Library {
         return borrowAndReturn;
     }
 
-    public UI getUi() {
-        return ui;
-    }
-
     public static void printMenu(String menu) {
         System.out.println(line);
         System.out.println(menu);
-        System.out.print(enterChoice);
+        System.out.print("Enter your choice: ");
     }
 
     public static void stopScreen() {
@@ -309,6 +297,6 @@ public class Library {
             }
             stopScreen();
         }
-        System.out.println("See you later");
+        System.out.println("See you later!");
     }
 }

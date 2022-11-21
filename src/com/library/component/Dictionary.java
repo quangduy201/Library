@@ -47,10 +47,6 @@ public class Dictionary extends Book {
         System.out.printf("%30s\n", language);
     }
 
-    public void update() {
-
-    }
-
     @Override
     public String toString() {
         return "DIC, " +

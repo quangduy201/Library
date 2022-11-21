@@ -49,6 +49,7 @@ public class Employee extends Person {
 
     @Override
     public void input() {
+        super.input();
         roll = inputRoll("Enter roll: ");
         startDate = inputStartDate("Enter start date (dd/mm/yyyy): ");
         salary = inputSalary("Enter salary: ");
@@ -79,10 +80,14 @@ public class Employee extends Person {
                 startDate.setDate(Integer.parseInt(day[0]));
                 startDate.setMonth(Integer.parseInt(day[1]));
                 startDate.setYear(Integer.parseInt(day[2]));
+                if (!Day.isValidDay(startDate)) {
+                    System.out.println("Start date is not valid!");
+                    hasError = true;
+                }
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || !Day.isValidDay(startDate));
+        } while (hasError);
         return startDate;
     }
 
@@ -97,10 +102,14 @@ public class Employee extends Person {
             input = sc.nextLine();
             try {
                 salary = Double.parseDouble(input);
+                if (salary < 0.0) {
+                    System.out.println("Salary must be a positive number!");
+                    hasError = true;
+                }
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || salary < 0);
+        } while (hasError);
         return salary;
     }
 
@@ -113,8 +122,40 @@ public class Employee extends Person {
     }
 
     @Override
-    public double calculatePrice(Day borrowDay, Day returnDay) {
-        return 0;
+    public double calculatePrice(Day borrowDay, Day returnDay, int numOfBooks) {
+        /*
+        Tính số tiền dựa theo số ngày:
+        - Trong 3 ngày đầu tiên, mỗi ngày giá tiền mỗi cuốn sách là 5000.
+        - Trong 3 ngày tiếp theo, mỗi ngày giá tiền mỗi cuốn sách là 6000.
+        - Những ngày sau đó mỗi ngày giá tiền mỗi cuốn sách là 10000.
+        Nếu tổng số tiền >= 100000 sẽ được giảm 10%
+        Nếu tổng số tiền >= 70000 sẽ được giảm 7%
+        Nếu tổng số tiền >= 30000 sẽ được giảm 5%
+         */
+        int days = Day.calculateDays(borrowDay, returnDay);
+        double money = 0.0;
+        if (days - 3 < 0)
+            money += days * 5000 * numOfBooks;
+        else {
+            money += 3 * 5000 * numOfBooks;
+            days -= 3;
+            if (days - 3 < 0)
+                money += days * 6000 * numOfBooks;
+            else {
+                money += 3 * 6000 * numOfBooks;
+                days -= 3;
+                money += days * 10000 * numOfBooks;
+            }
+        }
+
+        if (money >= 100000) {
+            money -= (money * 10.0 / 100); // 10%
+        } else if (money >= 70000) {
+            money -= (money * 7.0 / 100); // 7%
+        } else if (money >= 30000) {
+            money -= (money * 5.0 / 100); // 5%
+        }
+        return money;
     }
 
     @Override

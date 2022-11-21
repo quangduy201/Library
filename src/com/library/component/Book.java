@@ -1,5 +1,6 @@
 package com.library.component;
 
+import com.library.main.Library;
 import com.library.util.Day;
 
 import java.util.Scanner;
@@ -68,7 +69,15 @@ public class Book {
     }
 
     public void input() {
-        id = inputId("Enter ID: ");
+        int id;
+        do {
+            id = inputId("Enter ID (4 digits): ");
+            if (Library.getBookManagement().idExists(id))
+                System.out.println("ID has been used!");
+            else
+                break;
+        } while (true);
+        this.id = id;
         name = inputName("Enter name: ");
         remain = inputRemain("Enter remain: ");
         price = inputPrice("Enter price: ");
@@ -86,10 +95,17 @@ public class Book {
             input = sc.nextLine();
             try {
                 id = Integer.parseInt(input);
+                if (input.length() != 4) {
+                    System.out.println("ID must have 4 digits!");
+                    hasError = true;
+                } else if (id < 0) {
+                    System.out.println("ID must be a positive number!");
+                    hasError = true;
+                }
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || input.length() != 4 || id < 0);
+        } while (hasError);
         return id;
     }
 
@@ -114,10 +130,14 @@ public class Book {
             input = sc.nextLine();
             try {
                 remain = Integer.parseInt(input);
+                if (remain < 0) {
+                    System.out.println("Remain number must be a positive number!");
+                    hasError = true;
+                }
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || remain < 0);
+        } while (hasError);
         return remain;
     }
 
@@ -132,10 +152,13 @@ public class Book {
             input = sc.nextLine();
             try {
                 price = Double.parseDouble(input);
+                if (price < 0.0) {
+                    System.out.println("Price must be a positive number!");
+                }
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || price < 0.0);
+        } while (hasError);
         return price;
     }
 
@@ -154,6 +177,10 @@ public class Book {
                 publishDay.setDate(Integer.parseInt(day[0]));
                 publishDay.setMonth(Integer.parseInt(day[1]));
                 publishDay.setYear(Integer.parseInt(day[2]));
+                if (!Day.isValidDay(publishDay)) {
+                    System.out.println("Publish day is not valid!");
+                    hasError = true;
+                }
             } catch (Exception e) {
                 hasError = true;
             }
