@@ -243,8 +243,9 @@ public class EmployeeManagement implements Management, File {
         System.out.println("Gender:");
         System.out.printf("%15s: %d\t--> %.2f%%\n", "Nam", male, male * 100.0 / n);
         System.out.printf("%15s: %d\t--> %.2f%%\n", "Nữ", female, female * 100.0 / n);
-        if (rolls.length > 0)
-            System.out.println("Rolls:");
+        System.out.println("Rolls:");
+        if (rolls.length == 0)
+            System.out.println("There are no employees yet!");
         for (int i = 0; i < rolls.length; i++) {
             System.out.printf("%15s: %d\t--> %.2f%%\n", rolls[i], number[i], number[i] * 100.0 / n);
         }
@@ -253,7 +254,7 @@ public class EmployeeManagement implements Management, File {
     @Override
     public void readFile() {
         try {
-            FileReader file = new FileReader("res\\employees.dat");
+            FileReader file = new FileReader("data\\employees.txt");
             BufferedReader reader = new BufferedReader(file);
             String strLine;
             while ((strLine = reader.readLine()) != null)
@@ -265,7 +266,7 @@ public class EmployeeManagement implements Management, File {
     @Override
     public void writeFile() {
         try {
-            FileWriter file = new FileWriter("res\\employees.dat");
+            FileWriter file = new FileWriter("data\\employees.txt");
             BufferedWriter writer = new BufferedWriter(file);
             for (Employee employee : employees)
                 writer.write(employee.toString() + "\n");

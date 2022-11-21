@@ -295,7 +295,7 @@ public class BookManagement implements Management, File {
     @Override
     public void readFile() {
         try {
-            FileReader file = new FileReader("res\\books.dat");
+            FileReader file = new FileReader("data\\books.txt");
             BufferedReader reader = new BufferedReader(file);
             String strLine;
             while ((strLine = reader.readLine()) != null)
@@ -307,7 +307,7 @@ public class BookManagement implements Management, File {
     @Override
     public void writeFile() {
         try {
-            FileWriter file = new FileWriter("res\\books.dat");
+            FileWriter file = new FileWriter("data\\books.txt");
             BufferedWriter writer = new BufferedWriter(file);
             for (Book book : books)
                 writer.write(book.toString() + "\n");
@@ -331,8 +331,7 @@ public class BookManagement implements Management, File {
         }
         if (object[0].equals("REF")) {
             String author = object[6];
-            String translator = object[7];
-            book = new ReferenceBook(id, name, remain, price, publishDay, author, translator);
+            book = new ReferenceBook(id, name, remain, price, publishDay, author);
         }
         if (object[0].equals("DIC")) {
             String language = object[6];

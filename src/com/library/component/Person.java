@@ -231,7 +231,7 @@ public abstract class Person {
         System.out.printf("%6s  |%12s  |%18s  |%25s  |", gender, phone, address, email);
     }
 
-    public abstract double calculatePrice(Day borrowDay, Day returnDay);
+    public abstract double calculatePrice(Day borrowDay, Day returnDay, int numOfBooks);
 
     @Override
     public String toString() {

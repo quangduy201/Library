@@ -75,7 +75,7 @@ public class BorrowAndReturn implements File {
         Day returnDay = Day.inputDay("Enter return day: ");
 
         // CALCULATE PRICE
-        double price = person.calculatePrice(borrowDay, returnDay);
+        double price = person.calculatePrice(borrowDay, returnDay, books.length);
 
         // CREATE NEW BILL
         bills = Arrays.copyOf(bills, bills.length + 1);
@@ -190,10 +190,10 @@ public class BorrowAndReturn implements File {
         }
     }
 
-    public Bill[] findBill(int id) {
+    public Bill[] findBill(int personId) {
         Bill[] listBill = new Bill[0];
         for (Bill bill : bills) {
-            if (bill.getPerson().getId() == id) {
+            if (bill.getPerson().getId() == personId) {
                 listBill = Arrays.copyOf(listBill, listBill.length + 1);
                 listBill[listBill.length - 1] = bill;
             }
@@ -239,13 +239,18 @@ public class BorrowAndReturn implements File {
                 returned++;
             total += bill.getPrice();
         }
-
+        System.out.printf("Number of bills: %d\n", n);
+        System.out.printf("Student borrow:  %d\t--> %.2f%%\n", student, student * 100.0 / n);
+        System.out.printf("Employee borrow: %d\t--> %.2f%%\n", employee, employee * 100.0 / n);
+        System.out.printf("Have returned:     %d\t--> %.2f%%\n", returned, returned * 100.0 / n);
+        System.out.printf("Have not returned: %d\t--> %.2f%%\n", n - returned, (n - returned) * 100.0 / n);
+        System.out.printf("Total: %.2f\n", total);
     }
 
     @Override
     public void readFile() {
         try {
-            FileReader file = new FileReader("res\\bills.dat");
+            FileReader file = new FileReader("data\\bills.txt");
             BufferedReader reader = new BufferedReader(file);
             String strLine;
             while ((strLine = reader.readLine()) != null)
@@ -257,7 +262,7 @@ public class BorrowAndReturn implements File {
     @Override
     public void writeFile() {
         try {
-            FileWriter file = new FileWriter("res\\bills.dat");
+            FileWriter file = new FileWriter("data\\bills.txt");
             BufferedWriter writer = new BufferedWriter(file);
             for (Bill bill : bills)
                 writer.write(bill.toString() + "\n");

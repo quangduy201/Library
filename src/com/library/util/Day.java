@@ -123,8 +123,8 @@ public class Day {
         return day;
     }
 
-    public static Day parseDay(String s) {
-        String[] temp = s.split("/");
+    public static Day parseDay(String str) {
+        String[] temp = str.split("/");
         int date = Integer.parseInt(temp[0]);
         int month = Integer.parseInt(temp[1]);
         int year = Integer.parseInt(temp[2]);

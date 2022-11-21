@@ -243,8 +243,9 @@ public class StudentManagement implements Management, File {
         System.out.println("Gender:");
         System.out.printf("%25s: %d\t--> %.2f%%\n", "Nam", male, male * 100.0 / n);
         System.out.printf("%25s: %d\t--> %.2f%%\n", "Nữ", female, female * 100.0 / n);
-        if (faculties.length > 0)
-            System.out.println("Faculty:");
+        System.out.println("Faculty:");
+        if (faculties.length == 0)
+            System.out.println("\tThere are no students yet!");
         for (int i = 0; i < faculties.length; i++) {
             System.out.printf("%25s: %d\t--> %.2f%%\n", faculties[i], number[i], number[i] * 100.0 / n);
         }
@@ -253,7 +254,7 @@ public class StudentManagement implements Management, File {
     @Override
     public void readFile() {
         try {
-            FileReader file = new FileReader("res\\students.dat");
+            FileReader file = new FileReader("data\\students.txt");
             BufferedReader reader = new BufferedReader(file);
             String strLine;
             while ((strLine = reader.readLine()) != null)
@@ -265,7 +266,7 @@ public class StudentManagement implements Management, File {
     @Override
     public void writeFile() {
         try {
-            FileWriter file = new FileWriter("res\\students.dat");
+            FileWriter file = new FileWriter("data\\students.txt");
             BufferedWriter writer = new BufferedWriter(file);
             for (Student student : students)
                 writer.write(student.toString() + "\n");
