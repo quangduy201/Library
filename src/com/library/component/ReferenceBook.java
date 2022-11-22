@@ -12,8 +12,8 @@ public class ReferenceBook extends Book {
         this.author = "";
     }
 
-    public ReferenceBook(int id, String name, int remain, double price, Day publishDay, String author) {
-        super(id, name, remain, price, publishDay);
+    public ReferenceBook(String status, int id, String name, int remain, double price, Day publishDay, String author) {
+        super(status, id, name, remain, price, publishDay);
         this.author = author;
     }
 

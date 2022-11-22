@@ -3,7 +3,7 @@ package com.library.component;
 import com.library.util.Day;
 
 public class Bill {
-    private String mode;
+    private String status;
     private Person person;
     private Book[] books;
     private Day borrowDay;
@@ -11,15 +11,15 @@ public class Bill {
     private double price;
 
     public Bill() {
-        this.mode = "";
+        this.status = "";
         this.books = new Book[0];
         this.borrowDay = new Day();
         this.returnDay = new Day();
         this.price = 0.0;
     }
 
-    public Bill(String mode, Person person, Book[] books, Day borrowDay, Day returnDay, double price) {
-        this.mode = mode;
+    public Bill(String status, Person person, Book[] books, Day borrowDay, Day returnDay, double price) {
+        this.status = status;
         this.person = person;
         this.books = books;
         this.borrowDay = borrowDay;
@@ -27,8 +27,8 @@ public class Bill {
         this.price = price;
     }
 
-    public String getMode() {
-        return mode;
+    public String getStatus() {
+        return status;
     }
 
     public Book[] getBooks() {
@@ -52,12 +52,12 @@ public class Bill {
     }
 
     public void hasReturned() {
-        mode = "Returned";
+        status = "Returned";
     }
 
     public void output() {
         char check = ' ';
-        if (mode.equals("Returned"))
+        if (status.equals("Returned"))
             check = '\u2713';   // '✓'
         System.out.printf("%c  |%10d  |%24s  |%30s  |  ", check, person.getId(), person.getName(), books[0].getName());
         System.out.println(borrowDay + "  |  " + returnDay + "  |  " + price);
@@ -70,7 +70,7 @@ public class Bill {
         String bookList = books[0].getName();
         for (int i = 1; i < books.length; i++)
             bookList += " / " + books[i].getName();
-        return  mode + ", " +
+        return  status + ", " +
                 person.getId() + ", " +
                 person.getName() + ", " +
                 bookList + ", " +

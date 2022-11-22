@@ -16,8 +16,8 @@ public class Employee extends Person {
         this.salary = 0.0;
     }
 
-    public Employee(int id, String name, Day dob, String gender, String phone, String address, String email, String roll, Day startDate, double salary) {
-        super(id, name, dob, gender, phone, address, email);
+    public Employee(String status, int id, String name, Day dob, String gender, String phone, String address, String email, String roll, Day startDate, double salary) {
+        super(status, id, name, dob, gender, phone, address, email);
         this.roll = roll;
         this.startDate = startDate;
         this.salary = salary;

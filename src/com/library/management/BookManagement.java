@@ -31,7 +31,7 @@ public class BookManagement implements Management, File {
 
     public boolean idExists(int id) {
         for (Book book : books)
-            if (id == book.getId())
+            if (book.getStatus().equals("enabled") && id == book.getId())
                 return true;
         return false;
     }
@@ -42,6 +42,23 @@ public class BookManagement implements Management, File {
         String choice, input;
         int n = 0;
         boolean hasError;
+
+        do {
+            System.out.println("""
+                    Inputting books will overwrite all of the books.
+                    All existing books will be lost.
+                    \tDo you want to continue?
+                    1. Yes
+                    2. No
+                    """);
+            System.out.print("Enter your choice: ");
+            choice = sc.nextLine();
+            if (choice.equals("1"))
+                break;
+            if (choice.equals("2"))
+                return;
+        } while (true);
+
         do {
             hasError = false;
             System.out.print("Enter number of books: ");
@@ -51,7 +68,7 @@ public class BookManagement implements Management, File {
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || n <= 0);
+        } while (hasError || n < 0);
 
         books = new Book[n];
         for (int i = 0; i < n; i++) {
@@ -70,18 +87,26 @@ public class BookManagement implements Management, File {
             } while (books[i] == null);
             books[i].input();
         }
-        writeFile();
+        writeFile(books, false);
     }
 
     @Override
     public void output() {
-        if (books.length == 0) {
+        boolean hasBooks = false;
+        for (Book book : books) {
+            if (book.getStatus().equals("enabled")) {
+                hasBooks = true;
+                break;
+            }
+        }
+        if (!hasBooks) {
             System.out.println("There are no books yet.");
             return;
         }
         System.out.printf("   ID  %15s  NAME  %13s  REMAIN      PRICE  %4s  PUBLISH DAY  %14s  NOTE\n", "", "", "", "");
         for (Book book : books)
-            book.output();
+            if (book.getStatus().equals("enabled"))
+                book.output();
     }
 
     @Override
@@ -99,26 +124,28 @@ public class BookManagement implements Management, File {
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || k <= 0);
+        } while (hasError || k < 0);
 
-        books = Arrays.copyOf(books, books.length + k);
-        for (int i = n; i < books.length; i++) {
+        Book[] newBooks = new Book[k];
+        for (int i = 0; i < k; i++) {
             do {
-                books[i] = null;
-                System.out.println("\t\t\tBOOK " + (i - n + 1));
+                newBooks[i] = null;
+                System.out.println("\t\t\tBOOK " + (i + 1));
                 System.out.println(bookMenu);
                 System.out.print("Enter your choice: ");
                 choice = sc.nextLine();
                 if (choice.equals("1"))
-                    books[i] = new EducationBook();
+                    newBooks[i] = new EducationBook();
                 if (choice.equals("2"))
-                    books[i] = new ReferenceBook();
+                    newBooks[i] = new ReferenceBook();
                 if (choice.equals("3"))
-                    books[i] = new Dictionary();
-            } while (books[i] == null);
-            books[i].input();
+                    newBooks[i] = new Dictionary();
+            } while (newBooks[i] == null);
+            newBooks[i].input();
+            books = Arrays.copyOf(books, books.length + 1);
+            books[i + n] = newBooks[i];
         }
-        writeFile();
+        writeFile(newBooks, true);
     }
 
     @Override
@@ -142,7 +169,8 @@ public class BookManagement implements Management, File {
                 if (choice.equals("1")) {
                     book.setId(0); // reset ID to be able to edit ID
                     book.input();
-                    writeFile();
+                    System.out.println("Book edited!");
+                    writeFile(books, false);
                     break;
                 }
                 if (choice.equals("2"))
@@ -155,36 +183,29 @@ public class BookManagement implements Management, File {
     public void remove() {
         Scanner sc = new Scanner(System.in);
         int id = Book.inputId("Enter ID (4 digits): ");
-        boolean found = false;
-        for (int i = 0; i < books.length; i++) {
-            if (books[i].getId() == id) {   // found the book
-                found = true;
-                System.out.printf("   ID  %15s  NAME  %13s  REMAIN      PRICE  %4s  PUBLISH DAY  %14s  NOTE\n", "", "", "", "");
-                books[i].output();
-                do {
-                    System.out.println("""
+        Book book = findBook(id);
+        if (book == null)
+            System.out.println("Book not found!");
+        else {
+            System.out.printf("   ID  %15s  NAME  %13s  REMAIN      PRICE  %4s  PUBLISH DAY  %14s  NOTE\n", "", "", "", "");
+            book.output();
+            do {
+                System.out.println("""
                             \n\tRemove?
                             1. Yes
                             2. No
                             """);
-                    System.out.print("Enter your choice: ");
-                    String choice = sc.nextLine();
-                    if (choice.equals("1")) {
-                        for (int j = i; j < books.length - 1; j++)
-                            books[j] = books[j + 1];
-                        books = Arrays.copyOf(books, books.length - 1);
-                        System.out.println("Book removed!");
-                        writeFile();
-                        break;
-                    }
-                    if (choice.equals("2"))
-                        break;
-                } while (true);
-                break;
-            }
-        }
-        if (!found) {
-            System.out.println("Book not found!");
+                System.out.print("Enter your choice: ");
+                String choice = sc.nextLine();
+                if (choice.equals("1")) {
+                    book.setStatus("disabled");
+                    System.out.println("Book removed!");
+                    writeFile(books, false);
+                    break;
+                }
+                if (choice.equals("2"))
+                    break;
+            } while (true);
         }
     }
 
@@ -231,14 +252,14 @@ public class BookManagement implements Management, File {
 
     public Book findBook(int id) {
         for (Book book : books)
-            if (book.getId() == id)
+            if (book.getStatus().equals("enabled") && book.getId() == id)
                 return book;
         return null;
     }
 
     public Book findBook(String name) {
         for (Book book : books)
-            if (book.getName().equalsIgnoreCase(name))
+            if (book.getStatus().equals("enabled") && book.getName().equalsIgnoreCase(name))
                 return book;
         return null;
     }
@@ -246,7 +267,7 @@ public class BookManagement implements Management, File {
     public Book[] findBook(double low, double high) {
         Book[] booksFound = new Book[0];
         for (Book book : books) {
-            if (book.getPrice() >= low && book.getPrice() <= high) {
+            if (book.getStatus().equals("enabled") && book.getPrice() >= low && book.getPrice() <= high) {
                 booksFound = Arrays.copyOf(booksFound, booksFound.length + 1);
                 booksFound[booksFound.length - 1] = book; // if found, add the book to array
             }
@@ -257,16 +278,18 @@ public class BookManagement implements Management, File {
     @Override
     public void statistic() {
         /*
-        TODO:
-            Thống kê số lượng sách theo từng thể loại
-            Tính phần trăm số lượng mỗi thể loại so với tổng số lượng sách
+        Thống kê số lượng sách theo từng thể loại
+        Tính phần trăm số lượng mỗi thể loại so với tổng số lượng sách
          */
-        int n = books.length;
+        int n = 0;
         int edu = 0, eduRemain = 0;
         int ref = 0, refRemain = 0;
         int dic = 0, dicRemain = 0;
         int all = 0, remain;
         for (Book book : books) {
+            if (book.getStatus().equals("disabled"))
+                continue;
+            n++;
             remain = book.getRemain();
             if (book instanceof EducationBook) {
                 edu++;
@@ -305,11 +328,11 @@ public class BookManagement implements Management, File {
     }
 
     @Override
-    public void writeFile() {
+    public void writeFile(Object[] objects, boolean append) {
         try {
-            FileWriter file = new FileWriter("data\\books.txt");
+            FileWriter file = new FileWriter("data\\books.txt", append);
             BufferedWriter writer = new BufferedWriter(file);
-            for (Book book : books)
+            for (Object book : objects)
                 writer.write(book.toString() + "\n");
             writer.close();
         } catch (Exception ignored) {}
@@ -320,22 +343,23 @@ public class BookManagement implements Management, File {
         String[] object = line.split(", ");
         Book book = null;
 
-        int id = Integer.parseInt(object[1]);
-        String name = object[2];
-        int remain = Integer.parseInt(object[3]);
-        double price = Double.parseDouble(object[4]);
-        Day publishDay = Day.parseDay(object[5]);
+        String status = object[1];
+        int id = Integer.parseInt(object[2]);
+        String name = object[3];
+        int remain = Integer.parseInt(object[4]);
+        double price = Double.parseDouble(object[5]);
+        Day publishDay = Day.parseDay(object[6]);
         if (object[0].equals("EDU")) {
-            String publisher = object[6];
-            book = new EducationBook(id, name, remain, price, publishDay, publisher);
+            String publisher = object[7];
+            book = new EducationBook(status, id, name, remain, price, publishDay, publisher);
         }
         if (object[0].equals("REF")) {
-            String author = object[6];
-            book = new ReferenceBook(id, name, remain, price, publishDay, author);
+            String author = object[7];
+            book = new ReferenceBook(status, id, name, remain, price, publishDay, author);
         }
         if (object[0].equals("DIC")) {
-            String language = object[6];
-            book = new Dictionary(id, name, remain, price, publishDay, language);
+            String language = object[7];
+            book = new Dictionary(status, id, name, remain, price, publishDay, language);
         }
         books = Arrays.copyOf(books, books.length + 1);
         books[books.length - 1] = book;

@@ -17,8 +17,8 @@ public class Student extends Person {
         this.classroom = "";
     }
 
-    public Student(int id, String name, Day dob, String gender, String phone, String address, String email, String faculty, String major, String classroom) {
-        super(id, name, dob, gender, phone, address, email);
+    public Student(String status, int id, String name, Day dob, String gender, String phone, String address, String email, String faculty, String major, String classroom) {
+        super(status, id, name, dob, gender, phone, address, email);
         this.faculty = faculty;
         this.major = major;
         this.classroom = classroom;

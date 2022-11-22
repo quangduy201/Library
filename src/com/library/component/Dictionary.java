@@ -12,8 +12,8 @@ public class Dictionary extends Book {
         this.language = "";
     }
 
-    public Dictionary(int id, String name, int remain, double price, Day publishDay, String language) {
-        super(id, name, remain, price, publishDay);
+    public Dictionary(String status, int id, String name, int remain, double price, Day publishDay, String language) {
+        super(status, id, name, remain, price, publishDay);
         this.language = language;
     }
 

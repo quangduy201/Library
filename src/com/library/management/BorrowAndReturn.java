@@ -78,9 +78,11 @@ public class BorrowAndReturn implements File {
         double price = person.calculatePrice(borrowDay, returnDay, books.length);
 
         // CREATE NEW BILL
+        Bill[] newBill = new Bill[1];
+        newBill[0] = new Bill("Borrowed", person, books, borrowDay, returnDay, price);
         bills = Arrays.copyOf(bills, bills.length + 1);
-        bills[bills.length - 1] = new Bill("Borrowed", person, books, borrowDay, returnDay, price);
-        writeFile();
+        bills[bills.length - 1] = newBill[0];
+        writeFile(newBill, true);
     }
 
     public void returnBook() {
@@ -98,7 +100,7 @@ public class BorrowAndReturn implements File {
         // FIND BILLS OF PERSON
         Bill[] billList = new Bill[0];
         for (Bill bill : bills) {
-            if (bill.getPerson() == person && bill.getMode().equals("Borrowed")) {
+            if (bill.getPerson() == person && bill.getStatus().equals("Borrowed")) {
                 billList = Arrays.copyOf(billList, billList.length + 1);
                 billList[billList.length - 1] = bill;
             }
@@ -147,12 +149,33 @@ public class BorrowAndReturn implements File {
                     book.setRemain(remain + 1);
                 }
                 System.out.println("Books have been returned!");
-                writeFile();
+                writeFile(bills, false);
                 break;
             }
             if (choice.equals("2"))
                 break;
         } while (true);
+    }
+
+    public void output() {
+        boolean hasBorrowed = false;
+        for (Bill bill : bills) {
+            if (bill.getStatus().equals("Borrowed")) {
+                hasBorrowed = true;
+                break;
+            }
+        }
+        if (!hasBorrowed) {
+            System.out.println("There are no one borrowing books!");
+            return;
+        }
+        System.out.printf("%5s PERSON ID %8s PERSON NAME %15s BORROWED BOOKS %10s BORROW DAY %3s RETURN DAY %5s TOTAL\n", "", "", "", "", "", "");
+        for (Bill bill : bills) {
+            if (bill.getStatus().equals("Borrowed")) {
+                bill.output();
+                System.out.println();
+            }
+        }
     }
 
     public void find() {
@@ -183,10 +206,11 @@ public class BorrowAndReturn implements File {
         if (billList.length == 0)
             System.out.println("Bill not found!");
         else {
-            String temp = "";
-            System.out.printf("");
-            for (Bill bill : billList)
+            System.out.printf("%5s PERSON ID %8s PERSON NAME %15s BORROWED BOOKS %10s BORROW DAY %3s RETURN DAY %5s TOTAL\n", "", "", "", "", "", "");
+            for (Bill bill : billList) {
                 bill.output();
+                System.out.println();
+            }
         }
     }
 
@@ -221,11 +245,10 @@ public class BorrowAndReturn implements File {
 
     public void statistic() {
         /*
-        TODO:
-            Thống kê số lượng mượn/trả sách
-            Thống kê số lượng người mượn là sinh viên hay nhân viên
-            Thống kê số lượng người đã trả
-            Tính tổng số tiền
+        Thống kê số lượng mượn/trả sách
+        Thống kê số lượng người mượn là sinh viên hay nhân viên
+        Thống kê số lượng người đã trả
+        Tính tổng số tiền
          */
         int n = bills.length;
         int student = 0, employee = 0, returned = 0;
@@ -235,7 +258,7 @@ public class BorrowAndReturn implements File {
                 student++;
             if (bill.getPerson() instanceof Employee)
                 employee++;
-            if (bill.getMode().equals("Returned"))
+            if (bill.getStatus().equals("Returned"))
                 returned++;
             total += bill.getPrice();
         }
@@ -260,11 +283,11 @@ public class BorrowAndReturn implements File {
     }
 
     @Override
-    public void writeFile() {
+    public void writeFile(Object[] objects, boolean append) {
         try {
-            FileWriter file = new FileWriter("data\\bills.txt");
+            FileWriter file = new FileWriter("data\\bills.txt", append);
             BufferedWriter writer = new BufferedWriter(file);
-            for (Bill bill : bills)
+            for (Object bill : objects)
                 writer.write(bill.toString() + "\n");
             writer.close();
         } catch (Exception ignored) {}
@@ -273,7 +296,7 @@ public class BorrowAndReturn implements File {
     @Override
     public void convertToObject(String line) {
         String[] object = line.split(", ");
-        String mode = object[0];
+        String status = object[0];
         int personId = Integer.parseInt(object[1]);
         String personName = object[2];
         String[] bookList = object[3].split(" / ");
@@ -282,7 +305,7 @@ public class BorrowAndReturn implements File {
         double price = Double.parseDouble(object[6]);
 
         int borrow;
-        if (mode.equals("Borrowed"))
+        if (status.equals("Borrowed"))
             borrow = 1;
         else
             borrow = 0;
@@ -297,7 +320,7 @@ public class BorrowAndReturn implements File {
             books[i].setRemain(books[i].getRemain() - borrow);
         }
 
-        Bill bill = new Bill(mode, person, books, borrowDay, returnDay, price);
+        Bill bill = new Bill(status, person, books, borrowDay, returnDay, price);
         bills = Arrays.copyOf(bills, bills.length + 1);
         bills[bills.length - 1] = bill;
     }

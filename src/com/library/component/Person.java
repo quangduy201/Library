@@ -6,6 +6,7 @@ import com.library.util.Day;
 import java.util.Scanner;
 
 public abstract class Person {
+    private String status;
     private int id;
     private String name;
     private Day dob;
@@ -15,6 +16,7 @@ public abstract class Person {
     private String email;
 
     public Person() {
+        this.status = "enabled";
         this.id = 0;
         this.name = "";
         this.dob = new Day();
@@ -24,7 +26,8 @@ public abstract class Person {
         this.email = "";
     }
 
-    public Person(int id, String name, Day dob, String gender, String phone, String address, String email) {
+    public Person(String status, int id, String name, Day dob, String gender, String phone, String address, String email) {
+        this.status = status;
         this.id = id;
         this.name = name;
         this.dob = dob;
@@ -32,6 +35,14 @@ public abstract class Person {
         this.phone = phone;
         this.address = address;
         this.email = email;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getId() {
@@ -235,7 +246,8 @@ public abstract class Person {
 
     @Override
     public String toString() {
-        return  id + ", " +
+        return status + ", " +
+                id + ", " +
                 name + ", " +
                 dob + ", " +
                 gender + ", " +
