@@ -1,4 +1,4 @@
-[<img alt="SGU LOGO" src="res/sgu_logo.png" title="Trường Đại học Sài Gòn" width="100"/>](https://www.facebook.com/TruongDaihocSaiGon.SGU)
+[<img alt="SGU LOGO" src="http://is.am/58sw" title="Trường Đại học Sài Gòn" width="100px"/>](https://www.facebook.com/TruongDaihocSaiGon.SGU)
 
 # SGU Library Management
 * Simple project used for library management in [SGU](https://www.facebook.com/TruongDaihocSaiGon.SGU) (Sai Gon University).
