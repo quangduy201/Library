@@ -6,6 +6,7 @@ import com.library.util.Day;
 import java.util.Scanner;
 
 public class Book {
+    private String status;
     private int id;
     private String name;
     private int remain;
@@ -13,6 +14,7 @@ public class Book {
     private Day publishDay;
 
     public Book() {
+        this.status = "enabled";
         this.id = 0;
         this.name = "";
         this.remain = 0;
@@ -20,12 +22,21 @@ public class Book {
         this.publishDay = new Day();
     }
 
-    public Book(int id, String name, int remain, double price, Day publishDay) {
+    public Book(String status, int id, String name, int remain, double price, Day publishDay) {
+        this.status = status;
         this.id = id;
         this.name = name;
         this.remain = remain;
         this.price = price;
         this.publishDay = publishDay;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getId() {
@@ -195,7 +206,8 @@ public class Book {
 
     @Override
     public String toString() {
-        return  id + ", " +
+        return status + ", " +
+                id + ", " +
                 name + ", " +
                 remain + ", " +
                 price + ", " +

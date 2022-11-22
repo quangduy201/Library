@@ -24,7 +24,7 @@ public class StudentManagement implements Management, File {
 
     public boolean idExists(int id) {
         for (Student student : students)
-            if (id == student.getId())
+            if (student.getStatus().equals("enabled") && id == student.getId())
                 return true;
         return false;
     }
@@ -32,9 +32,26 @@ public class StudentManagement implements Management, File {
     @Override
     public void input() {
         Scanner sc = new Scanner(System.in);
-        String input;
+        String choice, input;
         int n = 0;
         boolean hasError;
+
+        do {
+            System.out.println("""
+                    Inputting students will overwrite all of the students.
+                    All existing students will be lost.
+                    \tDo you want to continue?
+                    1. Yes
+                    2. No
+                    """);
+            System.out.print("Enter your choice: ");
+            choice = sc.nextLine();
+            if (choice.equals("1"))
+                break;
+            if (choice.equals("2"))
+                return;
+        } while (true);
+
         do {
             hasError = false;
             System.out.print("Enter number of students: ");
@@ -44,7 +61,7 @@ public class StudentManagement implements Management, File {
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || n <= 0);
+        } while (hasError || n < 0);
 
         students = new Student[n];
         for (int i = 0; i < n; i++) {
@@ -52,18 +69,26 @@ public class StudentManagement implements Management, File {
             System.out.println("\t\t\tSTUDENT " + (i + 1));
             students[i].input();
         }
-        writeFile();
+        writeFile(students, false);
     }
 
     @Override
     public void output() {
-        if (students.length == 0) {
+        boolean hasStudents = false;
+        for (Student student : students) {
+            if (student.getStatus().equals("enabled")) {
+                hasStudents = true;
+                break;
+            }
+        }
+        if (!hasStudents) {
             System.out.println("There are no students yet.");
             return;
         }
         System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s SCHOOL %17s FACULTY %20s MAJOR %10s CLASSROOM\n", "", "", "", "", "", "", "", "", "", "", "");
         for (Student student : students)
-            student.output();
+            if (student.getStatus().equals("enabled"))
+                student.output();
     }
 
     @Override
@@ -81,15 +106,17 @@ public class StudentManagement implements Management, File {
             } catch (Exception e) {
                 hasError = true;
             }
-        } while (hasError || k <= 0);
+        } while (hasError || k < 0);
 
-        students = Arrays.copyOf(students, students.length + k);
-        for (int i = n; i < students.length; i++) {
-            students[i] = new Student();
-            System.out.println("\t\t\tSTUDENT " + (i - n + 1));
-            students[i].input();
+        Student[] newStudents = new Student[k];
+        for (int i = 0; i < k; i++) {
+            newStudents[i] = new Student();
+            System.out.println("\t\t\tSTUDENT " + (i + 1));
+            newStudents[i].input();
+            students = Arrays.copyOf(students, students.length + 1);
+            students[i + n] = newStudents[i];
         }
-        writeFile();
+        writeFile(newStudents, true);
     }
 
     @Override
@@ -113,7 +140,8 @@ public class StudentManagement implements Management, File {
                 if (choice.equals("1")) {
                     student.setId(0); // reset ID to be able to edit ID
                     student.input();
-                    writeFile();
+                    System.out.println("Student edited!");
+                    writeFile(students, false);
                     break;
                 }
                 if (choice.equals("2"))
@@ -126,36 +154,29 @@ public class StudentManagement implements Management, File {
     public void remove() {
         Scanner sc = new Scanner(System.in);
         int id = Student.inputId("Enter ID (8 digits): ");
-        boolean found = false;
-        for (int i = 0; i < students.length; i++) {
-            if (students[i].getId() == id) {    // found the student
-                found = true;
-                System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s SCHOOL %17s FACULTY %20s MAJOR %10s CLASSROOM\n", "", "", "", "", "", "", "", "", "", "", "");
-                students[i].output();
-                do {
-                    System.out.println("""
+        Student student = findStudent(id);
+        if (student == null)
+            System.out.println("Student not found!");
+        else {
+            System.out.printf("%4s ID %15s NAME %16s DOB %5s GENDER %5s PHONE %10s ADDRESS %16s EMAIL %16s SCHOOL %17s FACULTY %20s MAJOR %10s CLASSROOM\n", "", "", "", "", "", "", "", "", "", "", "");
+            student.output();
+            do {
+                System.out.println("""
                             \n\tRemove?
                             1. Yes
                             2. No
                             """);
-                    System.out.print("Enter your choice: ");
-                    String choice = sc.nextLine();
-                    if (choice.equals("1")) {
-                        for (int j = i; j < students.length - 1; j++)
-                            students[j] = students[j + 1];
-                        students = Arrays.copyOf(students, students.length - 1);
-                        System.out.println("Student removed!");
-                        writeFile();
-                        break;
-                    }
-                    if (choice.equals("2"))
-                        break;
-                } while (true);
-                break;
-            }
-        }
-        if (!found) {
-            System.out.println("Student not found!");
+                System.out.print("Enter your choice: ");
+                String choice = sc.nextLine();
+                if (choice.equals("1")) {
+                    student.setStatus("disabled");
+                    System.out.println("Student removed!");
+                    writeFile(students, false);
+                    break;
+                }
+                if (choice.equals("2"))
+                    break;
+            } while (true);
         }
     }
 
@@ -167,8 +188,8 @@ public class StudentManagement implements Management, File {
 
         do {
             System.out.println("""
-                    1. Find by ID
-                    2. Find by name
+                    1. Find Student by ID
+                    2. Find Student by name
                     """);
             System.out.print("Enter your choice: ");
             choice = sc.nextLine();
@@ -194,14 +215,14 @@ public class StudentManagement implements Management, File {
 
     public Student findStudent(int id) {
         for (Student student : students)
-            if (student.getId() == id)
+            if (student.getStatus().equals("enabled") && student.getId() == id)
                 return student;
         return null;
     }
 
     public Student findStudent(String name) {
         for (Student student : students)
-            if (student.getName().equalsIgnoreCase(name))
+            if (student.getStatus().equals("enabled") && student.getName().equalsIgnoreCase(name))
                 return student;
         return null;
     }
@@ -209,16 +230,18 @@ public class StudentManagement implements Management, File {
     @Override
     public void statistic() {
         /*
-        TODO:
-             Thống kê số lượng sinh viên theo giới tính
-             Thống kê số lượng sinh viên theo khoa
+        Thống kê số lượng sinh viên theo giới tính
+        Thống kê số lượng sinh viên theo khoa
          */
-        int n = students.length;
+        int n = 0;
         String[] faculties = new String[0];
         int[] number = new int[0];
         int male = 0, female = 0;
         boolean facultyExist;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < students.length; i++) {
+            if (students[i].getStatus().equals("disabled"))
+                continue;
+            n++;
             if (students[i].getGender().equals("Nam"))
                 male++;
             else
@@ -264,11 +287,11 @@ public class StudentManagement implements Management, File {
     }
 
     @Override
-    public void writeFile() {
+    public void writeFile(Object[] objects, boolean append) {
         try {
-            FileWriter file = new FileWriter("data\\students.txt");
+            FileWriter file = new FileWriter("data\\students.txt", append);
             BufferedWriter writer = new BufferedWriter(file);
-            for (Student student : students)
+            for (Object student : objects)
                 writer.write(student.toString() + "\n");
             writer.close();
         } catch (Exception ignored) {}
@@ -277,17 +300,18 @@ public class StudentManagement implements Management, File {
     @Override
     public void convertToObject(String line) {
         String[] object = line.split(", ");
-        int id = Integer.parseInt(object[0]);
-        String name = object[1];
-        Day dob = Day.parseDay(object[2]);
-        String gender = object[3];
-        String phone = object[4];
-        String address = object[5];
-        String email = object[6];
-        String faculty = object[8];
-        String major = object[9];
-        String classroom = object[10];
-        Student student = new Student(id, name, dob, gender, phone, address, email, faculty, major, classroom);
+        String status = object[0];
+        int id = Integer.parseInt(object[1]);
+        String name = object[2];
+        Day dob = Day.parseDay(object[3]);
+        String gender = object[4];
+        String phone = object[5];
+        String address = object[6];
+        String email = object[7];
+        String faculty = object[9];
+        String major = object[10];
+        String classroom = object[11];
+        Student student = new Student(status, id, name, dob, gender, phone, address, email, faculty, major, classroom);
         students = Arrays.copyOf(students, students.length + 1);
         students[students.length - 1] = student;
     }

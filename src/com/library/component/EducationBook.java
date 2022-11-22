@@ -12,8 +12,8 @@ public class EducationBook extends Book {
         this.publisher = "";
     }
 
-    public EducationBook(int id, String name, int remain, double price, Day publishDay, String publisher) {
-        super(id, name, remain, price, publishDay);
+    public EducationBook(String status, int id, String name, int remain, double price, Day publishDay, String publisher) {
+        super(status, id, name, remain, price, publishDay);
         this.publisher = publisher;
     }
 

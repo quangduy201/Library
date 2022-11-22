@@ -58,9 +58,10 @@ public class Library {
                         BORROW AND RETURN
             1. Borrow Book
             2. Return Book
-            3. Find Bill
-            4. Statistic Bill
-            5. Back
+            3. Output Borrowed Bill
+            4. Find Bill
+            5. Statistic Bill
+            6. Back
             """;
 
     public Library() {
@@ -273,17 +274,22 @@ public class Library {
                         System.out.println("\t\t\tRETURN BOOK");
                         borrowAndReturn.returnBook();
                     }
-                    if (choice.equals("3")) {   // Find Bill
+                    if (choice.equals("3")) {   // Output Borrowed Bill
+                        System.out.println(line);
+                        System.out.println("\t\t\tOUTPUT BORROWED BILL");
+                        borrowAndReturn.output();
+                    }
+                    if (choice.equals("4")) {   // Find Bill
                         System.out.println(line);
                         System.out.println("\t\t\tFIND BILL");
                         borrowAndReturn.find();
                     }
-                    if (choice.equals("4")) {   // Statistic Bill
+                    if (choice.equals("5")) {   // Statistic Bill
                         System.out.println(line);
                         System.out.println("\t\t\tSTATISTIC BILL");
                         borrowAndReturn.statistic();
                     }
-                    if (choice.equals("5")) {   // Back
+                    if (choice.equals("6")) {   // Back
                         choice = "0";
                         break;
                     }
