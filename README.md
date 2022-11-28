@@ -1,4 +1,4 @@
-[<img alt="SGU LOGO" src="http://is.am/58sw" title="Trường Đại học Sài Gòn" width="100px"/>](https://www.facebook.com/TruongDaihocSaiGon.SGU)
+[<img alt="SGU LOGO" src="res/sgu_logo.png" title="Trường Đại học Sài Gòn" width="100px"/>](https://www.facebook.com/TruongDaihocSaiGon.SGU)
 
 # SGU Library Management
 * Simple project used for library management in [SGU](https://www.facebook.com/TruongDaihocSaiGon.SGU) (Sai Gon University).
@@ -53,7 +53,7 @@ ___
 ___
 
 ## License
-[MIT License](LICENSE.md)
+[MIT License](https://github.com/quangduy201/Library/blob/main/LICENSE.md)
 
 Copyright (c) 2022 [SGU Library](https://github.com/quangduy201/Library)
 
