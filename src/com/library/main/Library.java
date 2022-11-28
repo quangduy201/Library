@@ -1,6 +1,8 @@
 package com.library.main;
 
+import com.library.component.Bill;
 import com.library.management.*;
+import com.library.ui.UI;
 
 import java.util.Scanner;
 
@@ -9,10 +11,10 @@ public class Library {
     private static EmployeeManagement employeeMan;
     private static StudentManagement studentMan;
     private static BorrowAndReturn borrowAndReturn;
-    private static String line =    "--------------------------------------------------" +
-                                    "--------------------------------------------------" +
-                                    "--------------------------------------------------" +
-                                    "--------------------------------------------------";
+    private static String line = "--------------------------------------------------" +
+            "--------------------------------------------------" +
+            "--------------------------------------------------" +
+            "--------------------------------------------------";
     private static String mainMenu = """
                         SGU LIBRARY
             1. Book Management
@@ -104,9 +106,25 @@ public class Library {
     }
 
     public static void main(String[] args) {
-        new Library();
         Scanner sc = new Scanner(System.in);
         String choice;
+        new Library();
+        do {
+            System.out.println("""
+                    1. Console
+                    2. App
+                    """);
+            System.out.print("Enter your choice: ");
+            choice = sc.nextLine();
+            if (choice.equals("1")) {
+                break;
+            }
+            if (choice.equals("2")) {
+                new UI();
+                return;
+            }
+        } while (true);
+
         while (true) {
             printMenu(mainMenu);
             choice = sc.nextLine();

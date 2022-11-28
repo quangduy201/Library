@@ -123,11 +123,18 @@ public class Day {
         return day;
     }
 
-    public static Day parseDay(String str) {
+    public static Day parseDay(String str) throws Exception {
         String[] temp = str.split("/");
-        int date = Integer.parseInt(temp[0]);
-        int month = Integer.parseInt(temp[1]);
-        int year = Integer.parseInt(temp[2]);
+        int date, month, year;
+        try {
+            date = Integer.parseInt(temp[0]);
+            month = Integer.parseInt(temp[1]);
+            year = Integer.parseInt(temp[2]);
+            if (!Day.isValidDay(date, month, year))
+                throw new Exception();
+        } catch (Exception e) {
+            throw new Exception();
+        }
         return new Day(date, month, year);
     }
 

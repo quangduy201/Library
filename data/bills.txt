@@ -1,4 +1,5 @@
-Borrowed, 10000004, Nguyễn Tiến Dũng, Từ điển Anh Việt / Từ điển Pháp Việt, 21/11/2022, 25/11/2022, 42000.0
-Borrowed, 10000002, Nguyễn Hoàng Long, Bộ SGK Lớp 1 / Bộ SGK lớp 2 / Bộ SGK lớp 3 / Bộ SGK lớp 4 / Bộ SGK lớp 5, 21/11/2022, 25/11/2022, 105000.0
+Returned, 10000004, Nguyễn Tiến Dũng, Từ điển Anh Việt / Từ điển Pháp Việt, 21/11/2022, 25/11/2022, 42000.0
 Borrowed, 10000003, Nguyễn Zi Đan, OOP cơ bản, 21/11/2022, 02/12/2022, 83000.0
 Returned, 10000001, Đinh Quang Duy, Lý thuyết đồ thị, 21/11/2022, 30/11/2022, 43000.0
+Borrowed, 10000002, Nguyễn Hoàng Long, Bộ SGK Lớp 1, 21/11/2022, 25/11/2022, 105000.0
+Borrowed, 10000004, Nguyễn Tiến Dũng, Bộ SGK Lớp 1 / Cấu trúc rời rạc / Từ điển Nga Việt, 28/11/2022, 29/11/2022, 15000.0

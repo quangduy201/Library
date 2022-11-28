@@ -339,7 +339,7 @@ public class BookManagement implements Management, File {
     }
 
     @Override
-    public void convertToObject(String line) {
+    public void convertToObject(String line) throws Exception {
         String[] object = line.split(", ");
         Book book = null;
 

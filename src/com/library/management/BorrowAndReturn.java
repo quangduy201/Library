@@ -19,6 +19,10 @@ public class BorrowAndReturn implements File {
         return bills;
     }
 
+    public static void setBills(Bill[] bills) {
+        BorrowAndReturn.bills = bills;
+    }
+
     public void borrowBook() {
         Scanner sc = new Scanner(System.in);
         boolean hasError;
@@ -294,7 +298,7 @@ public class BorrowAndReturn implements File {
     }
 
     @Override
-    public void convertToObject(String line) {
+    public void convertToObject(String line) throws Exception {
         String[] object = line.split(", ");
         String status = object[0];
         int personId = Integer.parseInt(object[1]);
