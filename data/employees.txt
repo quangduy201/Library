@@ -1,0 +1,4 @@
+enabled, 20000001, Nguyễn Văn A, 20/01/2003, Nam, 0987654321, TP Hồ Chí Minh, nguyenvana@gmail.com, Giám đốc, 07/05/2022, 15000000
+enabled, 20000002, Trần Thị B, 19/05/2003, Nữ, 0987654321, Hà Nội, tranthib@gmail.com, Thu ngân, 01/10/2022, 5000000
+enabled, 20000003, Lê Văn C, 10/08/2003, Nam, 0987654321, Huế, levanc@gmail.com, Thu ngân, 01/10/2022, 5000000
+enabled, 20000004, Huỳnh Tiến D, 30/6/2003, Nam, 0987654321, Đà nẵng, huynhtiend@gmail.com, Bảo vệ, 02/11/2022, 4200000

@@ -298,7 +298,7 @@ public class EmployeeManagement implements Management, File {
     }
 
     @Override
-    public void convertToObject(String line) {
+    public void convertToObject(String line) throws Exception {
         String[] object = line.split(", ");
         String status = object[0];
         int id = Integer.parseInt(object[1]);

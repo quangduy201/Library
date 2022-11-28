@@ -1,15 +1,15 @@
 EDU, enabled, 1001, Bộ SGK Lớp 1, 10, 186000.0, 01/01/2000, NXB Giáo Dục Việt Nam
-EDU, enabled, 1002, Bộ SGK lớp 2, 10, 179000.0, 01/01/2000, NXB Giáo Dục Việt Nam
-EDU, enabled, 1003, Bộ SGK lớp 3, 10, 115000.0, 01/01/2000, NXB Giáo Dục Việt Nam
-EDU, enabled, 1004, Bộ SGK lớp 4, 10, 200000.0, 01/01/2000, NXB Giáo Dục Việt Nam
+EDU, disabled, 1002, Bộ SGK lớp 2, 10, 179000.0, 01/01/2000, NXB Giáo Dục Việt Nam
+EDU, disabled, 1003, Bộ SGK lớp 3, 10, 115000.0, 01/01/2000, NXB Giáo Dục Việt Nam
+EDU, disabled, 1004, Bộ SGK lớp 4, 10, 200000.0, 01/01/2000, NXB Giáo Dục Việt Nam
 EDU, enabled, 1005, Bộ SGK lớp 5, 10, 259000.0, 01/01/2000, NXB Giáo Dục Việt Nam
 EDU, enabled, 1006, Giải tích 1, 2, 20000.0, 01/01/2000, Phạm Hoàng Quân
 EDU, enabled, 1007, Giải tích 2, 2, 20000.0, 01/01/2000, Phạm Hoàng Quân
 REF, enabled, 2001, OOP cơ bản, 5, 50000.0, 01/01/2000, Nguyễn Hồng Anh
-REF, enabled, 2002, Cấu trúc rời rạc, 5, 50000.0, 01/01/2000, Nguyễn Hòa
-REF, enabled, 2003, Kỹ thuật lập trình, 5, 50000.0, 01/01/2000, Phan Tấn Quốc
+REF, enabled, 2002, Cấu trúc rời rạc, 4, 50000.0, 01/01/2000, Nguyễn Hòa
+REF, disabled, 2003, Kỹ thuật lập trình, 5, 50000.0, 01/01/2000, Phan Tấn Quốc
 REF, enabled, 2004, Cơ sở dữ liệu nâng cao, 5, 50000.0, 01/01/2000, Huỳnh Minh Trí
 REF, enabled, 2005, Lý thuyết đồ thị, 5, 50000.0, 01/01/2000, Huỳnh Minh Trí
 DIC, enabled, 3001, Từ điển Anh Việt, 10, 105000.0, 01/01/2000, Tiếng Anh
 DIC, enabled, 3002, Từ điển Pháp Việt, 10, 105000.0, 01/01/2000, Tiếng Pháp
-DIC, enabled, 3003, Từ điển Nga Việt, 10, 105000.0, 01/01/2000, Tiếng Nga
+DIC, enabled, 3003, Từ điển Nga Việt, 9, 105000.0, 01/01/2000, Tiếng Nga
