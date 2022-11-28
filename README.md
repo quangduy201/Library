@@ -15,7 +15,7 @@ ___
 
 ## About this project
 
-### There are 16 classes:
+### There are 17 classes:
 * [Library](src/com/library/main/Library.java) ***Main***
 * [File](src/com/library/management/File.java) ***\<\<Interface\>\>***
 * [Management](src/com/library/management/Management.java) ***\<\<Interface\>\>***
@@ -32,6 +32,7 @@ ___
   * [Employee](src/com/library/component/Employee.java)
 * [Bill](src/com/library/component/Bill.java)
 * [Day](src/com/library/util/Day.java)
+* [UI](src/com/library/ui/UI.java)
 
 ### Diagram of this project:
 * [PDF file](diagram/Library_diagram.pdf)
@@ -52,7 +53,7 @@ ___
 ___
 
 ## License
-MIT License
+[MIT License](LICENSE.md)
 
 Copyright (c) 2022 [SGU Library](https://github.com/quangduy201/Library)
 
