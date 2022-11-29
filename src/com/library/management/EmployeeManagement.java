@@ -63,11 +63,14 @@ public class EmployeeManagement implements Management, File {
             }
         } while (hasError || n < 0);
 
-        employees = new Employee[n];
+        Employee[] newEmployees = new Employee[n];
+        employees = new Employee[0];
         for (int i = 0; i < n; i++) {
-            employees[i] = new Employee();
+            newEmployees[i] = new Employee();
             System.out.println("\t\t\tEMPLOYEE " + (i + 1));
-            employees[i].input();
+            newEmployees[i].input();
+            employees = Arrays.copyOf(employees, employees.length + 1);
+            employees[i] = newEmployees[i];
         }
         writeFile(employees, false);
     }
