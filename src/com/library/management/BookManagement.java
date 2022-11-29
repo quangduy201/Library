@@ -70,22 +70,25 @@ public class BookManagement implements Management, File {
             }
         } while (hasError || n < 0);
 
-        books = new Book[n];
+        Book[] newBooks = new Book[n];
+        books = new Book[0];
         for (int i = 0; i < n; i++) {
             do {
-                books[i] = null;
+                newBooks[i] = null;
                 System.out.println("\t\t\tBOOK " + (i + 1));
                 System.out.println(bookMenu);
                 System.out.print("Enter your choice: ");
                 choice = sc.nextLine();
                 if (choice.equals("1"))
-                    books[i] = new EducationBook();
+                    newBooks[i] = new EducationBook();
                 if (choice.equals("2"))
-                    books[i] = new ReferenceBook();
+                    newBooks[i] = new ReferenceBook();
                 if (choice.equals("3"))
-                    books[i] = new Dictionary();
-            } while (books[i] == null);
-            books[i].input();
+                    newBooks[i] = new Dictionary();
+            } while (newBooks[i] == null);
+            newBooks[i].input();
+            books = Arrays.copyOf(books, books.length + 1);
+            books[i] = newBooks[i];
         }
         writeFile(books, false);
     }

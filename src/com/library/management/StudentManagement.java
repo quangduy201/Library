@@ -63,11 +63,14 @@ public class StudentManagement implements Management, File {
             }
         } while (hasError || n < 0);
 
-        students = new Student[n];
+        Student[] newStudents = new Student[n];
+        students = new Student[0];
         for (int i = 0; i < n; i++) {
-            students[i] = new Student();
+            newStudents[i] = new Student();
             System.out.println("\t\t\tSTUDENT " + (i + 1));
-            students[i].input();
+            newStudents[i].input();
+            students = Arrays.copyOf(students, students.length + 1);
+            students[i] = newStudents[i];
         }
         writeFile(students, false);
     }
